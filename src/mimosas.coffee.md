@@ -1,84 +1,32 @@
-Mimosas
-=======
 
-What is it?
------------
+Getting started
+===============
 
-Mimosas is my observer/subject application starter. 
-
-Actually that's just a clever recursive acronym. Mimosas is mostly just a fun 
-way to explore the [Observer pattern][observer] ([Gof][gof]).
-
-Documentation
--------------
-
-This project uses the [literate programming style][literate], so all the
-documentation for it should be right here in the `src` directory. The whole 
-thing can be read from top to bottom, as if you were reading a technical book.
-
-Installation
-------------
-
-If you want to compile the propject you need to have [node][node] and [npm][npm]
-installed. If you've got that taken care of, you can run `npm install` from this
-directory to update all the required dependencies. 
-
-To update a specific NPM package run `npm install <name> --save-dev`. This will
-install the latest version of the package and update the `package.json` file with
-the new version number.
-
-Development
------------
-
-Several [Grunt][grunt] tasks are available on the command line. To run the tasks
-execute `grunt [taskname]` from the terminal. `[taskname]` is an optional task 
-to run. Here's a list of the important commands:
-
-* `grunt`: Compile the project and examples
-* `grunt server`: Compile the project, examples, and start a server
-
-Contributors
-------------
-
-* [Dustin Boston][dblogit]
-
-Usage
------
-
-The compiled `mimosas.js` file should be in `dist` directory in the root of the
-project. It's got everything it needs to work. Just copy it into your `libs`
-directory and you're good to go.
-
-Mimosas defines a module that works in Node, AMD and browser globals, depending
-on the environment. The [`returnExports` UMD pattern][umdjs] makes this work.
-We don't have any dependencies, so this is the simplified version.
+You can use Mimosas in Node, AMD and with browser globals, depending on your 
+environment. This is accomplished with the [returnExports UMD pattern][umdjs]. 
+Three aren't any dependencies, so this is the simplified version.
 
     ((root, factory) ->
 
-If you're using node you can just `require` the file as you would any other:
-
-`var mimosas = require('mimosas');`
-
-We can determine if you're using node by checking for the presence of `exports`.
+If you're using node you can just `require` the file as you would any other, 
+e.g. `var mimosas = require('libs/mimosas');`. Mimosas determines if you're using
+node by checking for the presence of `exports`.
 
       if typeof exports is 'object'
         module.exports = factory()
 
-If you're using AMD you can add Mimosas as dependeny to your module with the 
-standard define, like this: 
+If you're using AMD you can add Mimosas as a dependeny to your module with the 
+standard define: `define(['libs/mimosas'], function (mimosas) {});`.
 
-`define(['libs/mimosas'], function (mimosas) {});`
-
-To determine if you're using AMD we check for the define function on the window
-object. We use `window.define` rather than `define` because the compiled version
-gets wrapped within an anonymous function, so we don't have access to the global
-scope through `this`.
+To determine if you're using AMD, Mimosas checks the define function on the 
+window object. The window object must be used because the compiled version of
+Mimosas gets wrapped with an anonymous function, which prevents the script from
+accessing the global scope through `this`.
 
       else if typeof window.define is 'function' and window.define.amd
         window.define factory
 
-If you're not using node or AMD, `mimosas` will be available as a global. But 
-you wouldn't want to do something like that now, would you?
+If you're not using node or AMD, `mimosas` will be available as a global.
 
       else
         root.mimosas = factory()
@@ -89,17 +37,12 @@ API
 ---
 
 Mimosas exposes two objects: Observer and Subject. If you've used the variable
-name `mimosas`, as demonstrated in the Usage section, you can access these
-objects with `mimosas.Observer` or `mimosas.Subject`. 
-
-Both objects are classes and will need to be extended in your application. So 
-if you're not using CoffeeScript, using these objects might be a little tough.
-It is doable though, by copying the `__extends` method from CoffeeScript and
-including it in your application. Anyway, back to the API.
+name `mimosas`, you can access these objects with `mimosas.Observer` and 
+`mimosas.Subject`.
 
       {Observer, Subject}
 
-### `mimosas.Observer`
+### mimosas.Observer
 
     class Observer
       changed: (theChangedSubject) ->
@@ -109,33 +52,15 @@ to make sure that *your* observers have the `changed` method. Without that
 method, nothing would work. Boo.
 
 Your class is a "Concrete Observer" and you make it by extending the Observer 
-object, like this:
+object, like this: `class SongList extends mimosas.Observer`.
 
-`class SongList extends mimosas.Observer`
-
-Whenever the `changed` method gets fired it will get passed a reference to the
-Subject that was changed. Usually you will use this reference to find out what
-happened so that you can sync up the Observer with the new "state" of the 
+Whenever the `changed` method is called, the Subject that was changed will be
+passed in as a parameter. You'll need to use the changed subject to find out 
+what happened so that you can sync up your Observer with the new "state" of the 
 Subject. 
 
-### `mimosas.Subject`
+### mimosas.Subject
 
 
 
-License
--------
-
-Please see the [LICENSE](../LICENSE) file.
-
-Changelog
----------
-
-
-[literate]: http://en.wikipedia.org/wiki/Literate_programming
-[observer]: http://en.wikipedia.org/wiki/Observer_pattern)
-[gof]: http://en.wikipedia.org/wiki/Design_Patterns_(book)
-[node]: http://nodejs.org/
-[npm]: https://npmjs.org/
-[grunt]: http://gruntjs.com/
-[dblogit]: http://dblogit.com
 [umdjs]: https://github.com/umdjs/umd
