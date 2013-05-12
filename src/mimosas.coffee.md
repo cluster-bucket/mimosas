@@ -1,10 +1,9 @@
-
 Getting started
 ===============
 
 You can use Mimosas in Node, AMD and with browser globals, depending on your 
 environment. This is accomplished with the [returnExports UMD pattern][umdjs]. 
-Three aren't any dependencies, so this is the simplified version.
+There aren't any dependencies, so this is the simplified version.
 
     ((root, factory) ->
 
