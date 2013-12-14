@@ -47,16 +47,16 @@ Usage/Getting Started
 You can use Mimosas in Node, AMD and with browser globals, depending on your 
 environment. This is accomplished with the [returnExports UMD pattern][umdjs]. 
 There aren't any dependencies, so this is the simplified version.
-```coffeescript
-  ((root, factory) ->
-```
+
+    ((root, factory) ->
+
 If you're using node you can just `require` the file as you would any other, 
 e.g. `var mimosas = require('libs/mimosas');`. Mimosas determines if you're using
 node by checking for the presence of `exports`.
-```coffeescript
-    if typeof exports is 'object'
-       module.exports = factory()
-```
+
+      if typeof exports is 'object'
+        module.exports = factory()
+
 If you're using AMD you can add Mimosas as a dependeny to your module with the 
 standard define: `define(['libs/mimosas'], function (mimosas) {});`.
 
@@ -64,18 +64,18 @@ To determine if you're using AMD, Mimosas checks the define function on the
 window object. The window object must be used because the compiled version of
 Mimosas gets wrapped with an anonymous function, which prevents the script from
 accessing the global scope through `this`.
-```coffeescript
-    else if typeof window.define is 'function' and window.define.amd
-       window.define factory
-```
-If you're not using node or AMD, `mimosas` will be available as a global.
-```coffeescript
-    else
-       root.Mimosas = factory()
 
-   ) this, () ->
-     Mimosas
-```
+      else if typeof window.define is 'function' and window.define.amd
+        window.define factory
+
+If you're not using node or AMD, `mimosas` will be available as a global.
+
+      else
+        root.Mimosas = factory()
+
+    ) this, () ->
+      Mimosas
+
 ### Using Mimosas without CoffeeScript
 
 The compiled `mimosas.js` file is available in root directory of the 
@@ -98,14 +98,14 @@ API
 Mimosas exposes two objects: Observer and Subject. If you've used the variable
 name `mimosas`, you can access these objects with `mimosas.Observer` and 
 `mimosas.Subject`.
-```coffeescript
-  Mimosas = {}
-```
+
+    Mimosas = {}
+
 ### Mimosas.Observer
-```coffeescript
-  Mimosas.Observer = class Observer
-     changed: (theChangedSubject) ->
-```
+
+    Mimosas.Observer = class Observer
+      changed: (theChangedSubject) ->
+
 The Observer is an abstract class that's just here to make sure that
 your Concrete Observers have the `changed` method. Whenever it changes, 
 its `changed` method gets called and the Subject that was changed will 
@@ -132,26 +132,26 @@ Observer into the `detach` method.`
 Whenever something important happens in your Subject, you'll want to 
 call notify. That will call the `changed` method on all of the Observers
 that are attached, letting each know that something has been changed.
-```coffeescript
-  Mimosas.Subject = class Subject
 
-     counter = 0
-     observers = new Mimosas.List()
+    Mimosas.Subject = class Subject
 
-     attach: (obj) ->
-       obj.__POINTER__ = @counter
-       observers.append obj
-       counter += 1
+      counter = 0
+      observers = new Mimosas.List()
 
-     detach: (observer) ->
-       observers.remove observer
+      attach: (obj) ->
+        obj.__POINTER__ = @counter
+        observers.append obj
+        counter += 1
 
-     notify: () ->
-       i = new Mimosas.Iterator observers
-       while not i.isDone()
-         i.currentItem().changed @
-         i.next()
-```
+      detach: (observer) ->
+        observers.remove observer
+
+      notify: () ->
+        i = new Mimosas.Iterator observers
+        while not i.isDone()
+          i.currentItem().changed @
+          i.next()
+
 Your Concrete Subject just keeps track of whatever it thinks is
 important in the Concrete Observer. You can create create on by
 extending the Subject.
@@ -161,101 +161,101 @@ class ConcreteSubject extends Mimosas.Subject
 ````
 
 ### Mimosas.List
-```coffeescript
-  Mimosas.List = class List
-     constructor: () ->
-       # A list of pointers
-       @items = []
-       # Objects passed in by pointer
-       @objects = {}
 
-     # Returns the number of objects in the list
-     count: () ->
-       @items.length
+    Mimosas.List = class List
+      constructor: () ->
+        # A list of pointers
+        @items = []
+        # Objects passed in by pointer
+        @objects = {}
 
-     # Returns the object at the given length
-     get: (index) ->
-       @objects[@items[index]]
+      # Returns the number of objects in the list
+      count: () ->
+        @items.length
 
-     # Returns the first object in the list
-     first: () ->
-       @objects[@items[0]]
+      # Returns the object at the given length
+      get: (index) ->
+        @objects[@items[index]]
 
-     # Returns the last object in the list
-     last: () ->
-       @objects[@items[@items.length - 1]]
+      # Returns the first object in the list
+      first: () ->
+        @objects[@items[0]]
 
-     # Adds the argument to the list, making it the last item
-     append: (item) ->
-       pointer = item.__POINTER__
-       @items.push pointer
-       @objects[pointer] = item
+      # Returns the last object in the list
+      last: () ->
+        @objects[@items[@items.length - 1]]
 
-     # Removes the given element from the list.
-     remove: (item) ->
-       pointer = item.__POINTER__
-       delete @objects[pointer]
-       index = pointer in @items
-       @items.splice index, 1
+      # Adds the argument to the list, making it the last item
+      append: (item) ->
+        pointer = item.__POINTER__
+        @items.push pointer
+        @objects[pointer] = item
 
-     # Removes the last element from the list
-     removeLast: () ->
-       @remove @last
+      # Removes the given element from the list.
+      remove: (item) ->
+        pointer = item.__POINTER__
+        delete @objects[pointer]
+        index = pointer in @items
+        @items.splice index, 1
 
-     # Removes the first element from the list
-     removeFirst: () ->
-       @remove @first
+      # Removes the last element from the list
+      removeLast: () ->
+        @remove @last
 
-     # Removes all elements from the list
-     removeAll: () ->
-       @items = []
-       @objects = {}
-```
+      # Removes the first element from the list
+      removeFirst: () ->
+        @remove @first
+
+      # Removes all elements from the list
+      removeAll: () ->
+        @items = []
+        @objects = {}
+
 ### Mimosas.Iterator
-```coffeescript
-  # Defines an interface for accessing/traversing elements.
-   class Iterator
-     first: () ->
-     next: () ->
-     isDone: () ->
-     currentItem: () ->
 
-   # * Implements the Iterator interface
-   # * Keeps track of the current position in the traversal
-   #   of the aggregate
-   Mimosas.Iterator = class ConcreteIterator extends Iterator
-     constructor: (@list) ->
-       @current = 0
-     first: () ->
-       @current = 0
-     next: () ->
-       @current += 1
-     isDone: () ->
-       @current >= @list.count()
-     currentItem: () ->
-       throw new Error "IteratorOutOfBounds" if @isDone()
-       @list.get @current
-```
+    # Defines an interface for accessing/traversing elements.
+    class Iterator
+      first: () ->
+      next: () ->
+      isDone: () ->
+      currentItem: () ->
+
+    # * Implements the Iterator interface
+    # * Keeps track of the current position in the traversal
+    #   of the aggregate
+    Mimosas.Iterator = class ConcreteIterator extends Iterator
+      constructor: (@list) ->
+        @current = 0
+      first: () ->
+        @current = 0
+      next: () ->
+        @current += 1
+      isDone: () ->
+        @current >= @list.count()
+      currentItem: () ->
+        throw new Error "IteratorOutOfBounds" if @isDone()
+        @list.get @current
+
 ### Mimosas.Aggregate
-```coffeescript
-  # Defines an interface for creating an Iterator object
-   class Aggregate
-     createIterator: () ->
 
-   # Implements the Iterator creation interface to return an
-   # instance of the proper ConcreteIterator
-   Mimosas.Aggregate = class ConcreteAggregate extends Aggregate
-     createIterator: (items) ->
-       list = new List()
-       for key, val of items
-         val.__POINTER__ = key
-         list.append val
-       new Mimosas.Iterator list
-```
+    # Defines an interface for creating an Iterator object
+    class Aggregate
+      createIterator: () ->
+
+    # Implements the Iterator creation interface to return an
+    # instance of the proper ConcreteIterator
+    Mimosas.Aggregate = class ConcreteAggregate extends Aggregate
+      createIterator: (items) ->
+        list = new List()
+        for key, val of items
+          val.__POINTER__ = key
+          list.append val
+        new Mimosas.Iterator list
+
 ### Mimosas.extends
-```coffeescript
-  Mimosas['extends'] = `__extends`
-```
+
+    Mimosas['extends'] = `__extends`
+
 
 Contributors
 ------------
