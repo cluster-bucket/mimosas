@@ -19,63 +19,10 @@ documentation is available in the source file (`mimosas.litcoffee`) or
 here (README.md), which is an exact copy of the source file. It should 
 be read from top to bottom, as if you were reading a technical book.
 
-Installation
-------------
-
-If you want to compile the project you need to have [node][node] and 
-[npm][npm] installed. If you've got that taken care of, you can run 
-`npm install` from this directory to update all the required 
-dependencies. 
-
-To update a specific NPM package run `npm install <name> --save-dev`. 
-This will install the latest version of the package and update the 
-`package.json` file with the new version number.
-
-Development
------------
-
-Several [Grunt][grunt] tasks are available on the command line. To run 
-the tasks execute `grunt [taskname]` from the terminal. `[taskname]` 
-is an optional task to run. Here's a list of the important commands:
-
-* `grunt`: Compile the project and examples
-* `grunt server`: Compile the project, examples, and start a server
-
 Usage/Getting Started
 ---------------------
 
-You can use Mimosas in Node, AMD and with browser globals, depending on your 
-environment. This is accomplished with the [returnExports UMD pattern][umdjs]. 
-There aren't any dependencies, so this is the simplified version.
-```coffeescript
-  ((root, factory) ->
-```
-If you're using node you can just `require` the file as you would any other, 
-e.g. `var mimosas = require('libs/mimosas');`. Mimosas determines if you're using
-node by checking for the presence of `exports`.
-```coffeescript
-    if typeof exports is 'object'
-       module.exports = factory()
-```
-If you're using AMD you can add Mimosas as a dependeny to your module with the 
-standard define: `define(['libs/mimosas'], function (mimosas) {});`.
 
-To determine if you're using AMD, Mimosas checks the define function on the 
-window object. The window object must be used because the compiled version of
-Mimosas gets wrapped with an anonymous function, which prevents the script from
-accessing the global scope through `this`.
-```coffeescript
-    else if typeof window.define is 'function' and window.define.amd
-       window.define factory
-```
-If you're not using node or AMD, `mimosas` will be available as a global.
-```coffeescript
-    else
-       root.Mimosas = factory()
-
-   ) this, () ->
-     Mimosas
-```
 ### Using Mimosas without CoffeeScript
 
 The compiled `mimosas.js` file is available in root directory of the 
@@ -84,7 +31,7 @@ Mimosas provides the extend method documented below. Basically,
 whenever there's talk about extending something use this pattern with
 your constructor functions:
 
-```js
+```javascript
 var MyClass = (function(classToExtend) {
   Mimosas.extends(MyClass, classToExtend);
   function MyClass() {}
@@ -92,14 +39,19 @@ var MyClass = (function(classToExtend) {
 })(ClassToExtend);
 ```
 
-API
----
+API Reference
+-------------
 
 Mimosas exposes two objects: Observer and Subject. If you've used the variable
 name `mimosas`, you can access these objects with `mimosas.Observer` and 
 `mimosas.Subject`.
 ```coffeescript
   Mimosas = {}
+
+   it = {}
+   it['Mimosas should exist'] = (test) ->
+     test.equal Mimosas?, true
+     test.done()
 ```
 ### Mimosas.Observer
 ```coffeescript
@@ -119,47 +71,16 @@ class ConcreteObserver extends Mimosas.Observer
   update: (theChangedSubject) ->
     console.log "Updated"
 ```
-
-### Mimosas.Subject
-
-The Subject is what makes things tick. It keeps a running list of all
-its Observers in a List and it can have as many Observers as needed.
-
-You can attach Observers to the Subject via the `attach` method and if
-you want to stop notifying an Observer you can simply pass the whole
-Observer into the `detach` method.`
-
-Whenever something important happens in your Subject, you'll want to 
-call notify. That will call the `changed` method on all of the Observers
-that are attached, letting each know that something has been changed.
 ```coffeescript
-  Mimosas.Subject = class Subject
+  it['Mimosas.Observer should exist'] = (test) ->
+     test.equal Mimosas.Observer?, true
+     test.done()
 
-     counter = 0
-     observers = new Mimosas.List()
-
-     attach: (obj) ->
-       obj.__POINTER__ = @counter
-       observers.append obj
-       counter += 1
-
-     detach: (observer) ->
-       observers.remove observer
-
-     notify: () ->
-       i = new Mimosas.Iterator observers
-       while not i.isDone()
-         i.currentItem().changed @
-         i.next()
+   it['Mimosas.Observer should have a changed event'] = (test) ->
+     observer = new Mimosas.Observer()
+     test.equal observer.changed?, true
+     test.done()
 ```
-Your Concrete Subject just keeps track of whatever it thinks is
-important in the Concrete Observer. You can create create on by
-extending the Subject.
-
-````
-class ConcreteSubject extends Mimosas.Subject
-````
-
 ### Mimosas.List
 ```coffeescript
   Mimosas.List = class List
@@ -210,6 +131,10 @@ class ConcreteSubject extends Mimosas.Subject
      removeAll: () ->
        @items = []
        @objects = {}
+
+   it['Mimosas.List should exist'] = (test) ->
+     test.equal Mimosas.List?, true
+     test.done()
 ```
 ### Mimosas.Iterator
 ```coffeescript
@@ -235,6 +160,10 @@ class ConcreteSubject extends Mimosas.Subject
      currentItem: () ->
        throw new Error "IteratorOutOfBounds" if @isDone()
        @list.get @current
+
+   it['Mimosas.Iterator should exist'] = (test) ->
+     test.equal Mimosas.Iterator?, true
+     test.done()
 ```
 ### Mimosas.Aggregate
 ```coffeescript
@@ -251,11 +180,117 @@ class ConcreteSubject extends Mimosas.Subject
          val.__POINTER__ = key
          list.append val
        new Mimosas.Iterator list
+
+   it['Mimosas.Aggregate should exist'] = (test) ->
+     test.equal Mimosas.Aggregate?, true
+     test.done()
 ```
+### Mimosas.Subject
+
+The Subject is what makes things tick. It keeps a running list of all
+its Observers in a List and it can have as many Observers as needed.
+
+You can attach Observers to the Subject via the `attach` method and if
+you want to stop notifying an Observer you can simply pass the whole
+Observer into the `detach` method.`
+
+Whenever something important happens in your Subject, you'll want to 
+call notify. That will call the `changed` method on all of the Observers
+that are attached, letting each know that something has been changed.
+```coffeescript
+  Mimosas.Subject = class Subject
+
+     counter = 0
+     observers = new Mimosas.List()
+
+     attach: (obj) ->
+       obj.__POINTER__ = @counter
+       observers.append obj
+       counter += 1
+
+     detach: (observer) ->
+       observers.remove observer
+
+     notify: () ->
+       i = new Mimosas.Iterator observers
+       while not i.isDone()
+         i.currentItem().changed @
+         i.next()
+
+   it['Mimosas.Subject should exist'] = (test) ->
+     test.equal Mimosas.Subject?, true
+     test.done()
+```
+Your Concrete Subject just keeps track of whatever it thinks is
+important in the Concrete Observer. You can create create on by
+extending the Subject.
+
+```coffeescript
+class ConcreteSubject extends Mimosas.Subject
+```
+
 ### Mimosas.extends
 ```coffeescript
   Mimosas['extends'] = `__extends`
+
+   it['Mimosas.extends should exist'] = (test) ->
+     test.equal Mimosas.extends?, true
+     test.done()
 ```
+Including Mimosas in your project
+---------------------------------
+
+You can use Mimosas in Node, AMD and with browser globals, depending on your 
+environment. This is accomplished with the [returnExports UMD pattern][umdjs]. 
+There aren't any dependencies, so this is the simplified version.
+
+If you're using node you can just `require` the file as you would any other, 
+e.g. `var mimosas = require('libs/mimosas');`. Mimosas determines if you're using
+node by checking for the presence of `exports`.
+
+If you're using AMD you can add Mimosas as a dependeny to your module with the 
+standard define: `define(['libs/mimosas'], function (mimosas) {});`.
+
+To determine if you're using AMD, Mimosas checks the define function on the 
+window object. The window object must be used because the compiled version of
+Mimosas gets wrapped with an anonymous function, which prevents the script from
+accessing the global scope through `this`.
+
+If you're not using node or AMD, `Mimosas` will be available as a global.
+```coffeescript
+  ((root, factory) ->
+     if typeof exports is 'object'
+       module.exports = factory()
+       if process?.argv?[2] is 'test'
+         module.exports = it
+     else if typeof window.define is 'function' and window.define.amd
+       window.define factory
+     else
+       root.Mimosas = factory()
+   ) this, () ->
+     Mimosas
+```
+Installation
+------------
+
+If you want to compile the project you need to have [node][node] and 
+[npm][npm] installed. If you've got that taken care of, you can run 
+`npm install` from this directory to update all the required 
+dependencies. 
+
+To update a specific NPM package run `npm install <name> --save-dev`. 
+This will install the latest version of the package and update the 
+`package.json` file with the new version number.
+
+Development
+-----------
+
+Several [Grunt][grunt] tasks are available on the command line. To run 
+the tasks execute `grunt [taskname]` from the terminal. `[taskname]` 
+is an optional task to run. Here's a list of the important commands:
+
+* `grunt`: Compile the project and examples
+* `grunt server`: Compile the project, examples, and start a server
 
 Contributors
 ------------
