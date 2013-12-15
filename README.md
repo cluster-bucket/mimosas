@@ -4,32 +4,70 @@ Mimosas
 What is it?
 -----------
 
-Mimosas is my observer/subject application starter. 
+Mimosas is my observer/subject application starter. AKA TrueMVC (TM).
 
 Actually that's just a clever recursive acronym. Mimosas is mostly just
-a fun way to explore the [Observer pattern][observer] ([Gof][gof]) 
-using classical inheritance and [CoffeeScript][cs]. I use this
-collection of patterns, in this way, almost every day.
+a fun way to explore the [Observer pattern][observer] ([Gof][gof])
+using classical inheritance (which I enjoy) and [CoffeeScript][cs]. I
+use this collection of patterns, in this way, almost every day.
+Especially with MVC, wherein I do believe that it is The One True MVC,
+so help me god, forever and ever amen (Corrections welcome). ;-)
 
 Documentation
 -------------
 
 This project uses the [literate programming style][literate], so all the
 documentation is available in the source file (`mimosas.litcoffee`) or
-here (README.md), which is an exact copy of the source file. It should 
-be read from top to bottom, as if you were reading a technical book.
+here (README.md), which is an exact copy of the source file. It should
+be read from top to bottom, front to back, as if you were reading a The 
+Book of Armaments, especially chapter two, verses nine through twenty-one.
+
+Overview
+--------
+
+As was previously foretold, I use Mimosas as the Model/Collection/View
+layer in a few of the applications I work on regularly. The Models and
+Collections are Subjects and the Views are Observers. Whenever a Model
+or Collection gets modified it notifies all the views and they all
+update accordingly. Hooray. There are lots of other uses for this
+pattern, but alas, I shall leave that as an exercise of the readers'
+depraved imagination.
+
+I also get a lot of mileage out of the Iterator and Aggregator. I know
+the Iterator is a little old-school but it's nice to use and it's drop
+dead simple. The Aggregator is just a simple way to parse objects into
+an Iterator with the correct format.
+
+Lastly, the List is invaluable. It's probably not that efficient, there
+are probably many better ways to do it. However, it's incredibly easy
+to understand and maintain and so I keep using it. Maybe now that it's
+documented and tested I'll start tweaking to make it nice and fast.
 
 Usage/Getting Started
 ---------------------
 
+First off, you'll want to get Mimosas into your project somehow. The
+compiled `mimosas.js` file is available in root directory. You'll want
+to get it and copy it somewhere in your project. Let's say you put it
+in your `libs` directory (it's not a Bower component yet).
 
-### Using Mimosas without CoffeeScript
+Now you can `require` it in Node or use RequireJS in the browser.
+If you don't have either of those, it's availble as `window.Mimosas`.
+See the [Including Mimosas](#including-mimosas) section for more detail.
 
-The compiled `mimosas.js` file is available in root directory of the 
-project. I understand that not everybody digs the CoffeeScript thing so
-Mimosas provides the extend method documented below. Basically, 
-whenever there's talk about extending something use this pattern with
-your constructor functions:
+Next, you'll want to extend `Mimosas.Observer` and `Mimosas.Subject`
+objects to your hearts content. If you're using CoffeeScript it's very
+easy. For example:
+
+```coffeescript
+class SongModel extends Mimosas.Subject
+class SongView extends Mimosas.Observer
+```
+
+If you're using plain JavaScript, that's cool. You have to do a little
+more work though. Mimosas provides the extend method to help you out.
+Basically, whenever there's talk about extending something use this
+pattern with your constructor functions:
 
 ```javascript
 var MyClass = (function(classToExtend) {
@@ -37,6 +75,22 @@ var MyClass = (function(classToExtend) {
   function MyClass() {}
   // ..prototypes
 })(ClassToExtend);
+```
+
+So our example above would look like:
+
+```javascript
+var SongModel = (function(classToExtend) {
+  Mimosas.extends(SongModel, classToExtend);
+  function SongModel() {}
+  // ..prototypes
+})(Mimosas.Subject);
+
+var SongView = (function(classToExtend) {
+  Mimosas.extends(SongView, classToExtend);
+  function SongView() {}
+  // ..prototypes
+})(Mimosas.Observer);
 ```
 
 API Reference
@@ -47,11 +101,6 @@ name `mimosas`, you can access these objects with `mimosas.Observer` and
 `mimosas.Subject`.
 ```coffeescript
   Mimosas = {}
-
-   it = {}
-   it['Mimosas should exist'] = (test) ->
-     test.equal Mimosas?, true
-     test.done()
 ```
 ### Mimosas.Observer
 ```coffeescript
@@ -71,16 +120,7 @@ class ConcreteObserver extends Mimosas.Observer
   update: (theChangedSubject) ->
     console.log "Updated"
 ```
-```coffeescript
-  it['Mimosas.Observer should exist'] = (test) ->
-     test.equal Mimosas.Observer?, true
-     test.done()
 
-   it['Mimosas.Observer should have a changed event'] = (test) ->
-     observer = new Mimosas.Observer()
-     test.equal observer.changed?, true
-     test.done()
-```
 ### Mimosas.List
 ```coffeescript
   Mimosas.List = class List
@@ -95,8 +135,14 @@ class ConcreteObserver extends Mimosas.Observer
        @items.length
 
      # Returns the object at the given length
-     get: (index) ->
+     getByIndex: (index) ->
+       throw new Error 'ArrayOutOfBoundsException' if index >= @count()
+       throw new Error 'ArrayOutOfBoundsException' if index < 0
        @objects[@items[index]]
+
+     # Returns the object with the given pointer
+     get: (pointer) ->
+       @objects[pointer]
 
      # Returns the first object in the list
      first: () ->
@@ -108,33 +154,41 @@ class ConcreteObserver extends Mimosas.Observer
 
      # Adds the argument to the list, making it the last item
      append: (item) ->
+       throw new Error 'NullPointerException' unless item.__POINTER__?
        pointer = item.__POINTER__
        @items.push pointer
        @objects[pointer] = item
 
      # Removes the given element from the list.
-     remove: (item) ->
-       pointer = item.__POINTER__
+     remove: (pointer) ->
+       throw new Error 'ArgumentException' unless pointer?
+       throw new Error 'ListItemUndefined' unless @objects[pointer]?
+
+       index = -1
+       for item, i in @items
+         if item is pointer
+           index = i
+           break
+
+       throw new Error 'ListItemUndefined' if index is -1
+
        delete @objects[pointer]
-       index = pointer in @items
        @items.splice index, 1
 
      # Removes the last element from the list
      removeLast: () ->
-       @remove @last
+       item = @last()
+       @remove item.__POINTER__
 
      # Removes the first element from the list
      removeFirst: () ->
-       @remove @first
+       item = @first()
+       @remove item.__POINTER__
 
      # Removes all elements from the list
      removeAll: () ->
        @items = []
        @objects = {}
-
-   it['Mimosas.List should exist'] = (test) ->
-     test.equal Mimosas.List?, true
-     test.done()
 ```
 ### Mimosas.Iterator
 ```coffeescript
@@ -160,10 +214,6 @@ class ConcreteObserver extends Mimosas.Observer
      currentItem: () ->
        throw new Error "IteratorOutOfBounds" if @isDone()
        @list.get @current
-
-   it['Mimosas.Iterator should exist'] = (test) ->
-     test.equal Mimosas.Iterator?, true
-     test.done()
 ```
 ### Mimosas.Aggregate
 ```coffeescript
@@ -180,10 +230,6 @@ class ConcreteObserver extends Mimosas.Observer
          val.__POINTER__ = key
          list.append val
        new Mimosas.Iterator list
-
-   it['Mimosas.Aggregate should exist'] = (test) ->
-     test.equal Mimosas.Aggregate?, true
-     test.done()
 ```
 ### Mimosas.Subject
 
@@ -216,10 +262,6 @@ that are attached, letting each know that something has been changed.
        while not i.isDone()
          i.currentItem().changed @
          i.next()
-
-   it['Mimosas.Subject should exist'] = (test) ->
-     test.equal Mimosas.Subject?, true
-     test.done()
 ```
 Your Concrete Subject just keeps track of whatever it thinks is
 important in the Concrete Observer. You can create create on by
@@ -232,13 +274,9 @@ class ConcreteSubject extends Mimosas.Subject
 ### Mimosas.extends
 ```coffeescript
   Mimosas['extends'] = `__extends`
-
-   it['Mimosas.extends should exist'] = (test) ->
-     test.equal Mimosas.extends?, true
-     test.done()
 ```
-Including Mimosas in your project
----------------------------------
+Including Mimosas
+-----------------
 
 You can use Mimosas in Node, AMD and with browser globals, depending on your 
 environment. This is accomplished with the [returnExports UMD pattern][umdjs]. 
@@ -261,8 +299,6 @@ If you're not using node or AMD, `Mimosas` will be available as a global.
   ((root, factory) ->
      if typeof exports is 'object'
        module.exports = factory()
-       if process?.argv?[2] is 'test'
-         module.exports = it
      else if typeof window.define is 'function' and window.define.amd
        window.define factory
      else
@@ -285,12 +321,13 @@ This will install the latest version of the package and update the
 Development
 -----------
 
-Several [Grunt][grunt] tasks are available on the command line. To run 
-the tasks execute `grunt [taskname]` from the terminal. `[taskname]` 
-is an optional task to run. Here's a list of the important commands:
+Several CoffeeScript (cake) tasks are available on the command line. 
+To run the tasks execute `cake [taskname]` from the terminal.
+Here's a list of the important commands:
 
-* `grunt`: Compile the project and examples
-* `grunt server`: Compile the project, examples, and start a server
+* `cake build`: Compile the project and start a watch (also `npm start`)
+* `cake readme`: Copy the project to the README in a GitHub-friendly way
+* `cake test`: Run the unit tests (also `npm test`)
 
 Contributors
 ------------
@@ -300,7 +337,7 @@ Contributors
 License
 -------
 
-Please see the [LICENSE](../LICENSE) file.
+Please see the LICENSE file in the root of the project.
 
 [literate]: http://en.wikipedia.org/wiki/Literate_programming
 [observer]: http://en.wikipedia.org/wiki/Observer_pattern)
