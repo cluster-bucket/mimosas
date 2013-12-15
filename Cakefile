@@ -8,7 +8,7 @@ task "build", "watch and build the Mimosas source", ->
 
 task "test", "test Mimosa agains itself", ->
   reporter = require('nodeunit').reporters.default
-  reporter.run ['mimosas.litcoffee']
+  reporter.run ['test/observer.litcoffee']
 
 # Until GitHub has proper Literate CoffeeScript highlighting support, let's
 # manually futz the README ourselves.
