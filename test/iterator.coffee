@@ -52,8 +52,7 @@ exports.Iterator =
     
   'should go back to the first item': (test) ->
     {iterator, list} = makeIterator 'foo', 'bar'
-    iterator.next()
-    iterator.first()
+    iterator.next().first()
     item = iterator.currentItem()
     test.equal item.__POINTER__, 'foo'
     test.done()
