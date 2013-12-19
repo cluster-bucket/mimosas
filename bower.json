@@ -1,0 +1,16 @@
+{
+  "name": "Mimosas",
+  "main": "",
+  "version": "0.0.1",
+  "homepage": "https://github.com/dustinboston/mimosas",
+  "authors": [
+    "Dustin Boston <dustin@dblogit.com>"
+  ],
+  "license": "GPLv3",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "test"
+  ]
+}

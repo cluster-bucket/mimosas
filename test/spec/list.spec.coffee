@@ -1,11 +1,12 @@
 ((root, factory) ->
   if typeof define is 'function' and define.amd
-    define ['list'], factory
+    define ['../../bin/list'], factory
   else if typeof exports is 'object'
-    module.exports = factory(require('../../src/list.coffee'))
+    List = require '../../src/list.coffee'
+    module.exports = factory List
   else
-    root.MimosasSpec = {} unless root.MimosasSpec?
-    root.MimosasSpec.List = factory(root.Mimosas.List)
+    List = root.Mimosas.List
+    factory List
 ) @, (List) ->
 
   describe 'List', ->
@@ -29,85 +30,84 @@
     afterEach ->
       list = undefined
 
-    it 'should exist', (test) ->
-      expect(List).toBeDefined()
+    it 'should exist', ->
+      expect(List).to.exist
 
-    it 'should have a zero count on init', (test) ->
-      expect(list.count()).toEqual 0
+    it 'should have a zero count on init', ->
+      expect(list.count()).to.equal 0
 
-    it 'should throw when appending an item without a pointer', (test) ->
+    it 'should throw when appending an item without a pointer', ->
       throwMe = ->
         list.append {}
-      expect(throwMe).toThrow()
+      expect(throwMe).to.throw()
 
-    it 'should append an item', (test) ->
+    it 'should append an item', ->
       item = getTestItem('foo')
       list.append item
-      expect(list.count()).toEqual 1
+      expect(list.count()).to.equal 1
 
-    it 'should get an item by its index', (test) ->
+    it 'should get an item by its index', ->
       appendTestItems 'foo'
       item = list.getByIndex(0)
-      expect(item.__POINTER__).toBe 'foo'
+      expect(item.__POINTER__).to.equal 'foo'
 
-    it 'should throw when getting an item by an index that doesn\'t exist', (test) ->
+    it 'should throw when getting an item by an index that doesn\'t exist', ->
       throwMe = ->
         list.getByIndex 0
-      expect(throwMe).toThrow()
+      expect(throwMe).to.throw()
 
-    it 'should throw when getting an item by a negative index', (test) ->
+    it 'should throw when getting an item by a negative index', ->
       throwMe = ->
         list.getByIndex -1
-      expect(throwMe).toThrow()
+      expect(throwMe).to.throw()
 
-    it 'should get an item by its pointer', (test) ->
+    it 'should get an item by its pointer', ->
       appendTestItems 'foo', 'bar'
       item = list.get('bar')
-      expect(item.__POINTER__).toBe 'bar'
+      expect(item.__POINTER__).to.equal 'bar'
 
-    it 'should get the first item in the list', (test) ->
+    it 'should get the first item in the list', ->
       appendTestItems 'foo', 'bar'
       item = list.first()
-      expect(item.__POINTER__).toBe 'foo'
+      expect(item.__POINTER__).to.equal 'foo'
 
-    it 'should get the last item in the list', (test) ->
+    it 'should get the last item in the list', ->
       appendTestItems 'foo', 'bar'
       item = list.last()
-      expect(item.__POINTER__).toBe 'bar'
+      expect(item.__POINTER__).to.equal 'bar'
 
-    it 'should throw when removing an item that doesn\'t exist', (test) ->
+    it 'should throw when removing an item that doesn\'t exist', ->
       throwMe = ->
         list.remove 'baz'
-      expect(throwMe).toThrow()
+      expect(throwMe).to.throw()
 
-    it 'should remove an item from the list', (test) ->
+    it 'should remove an item from the list', ->
       appendTestItems 'foo', 'bar'
-      expect(list.count()).toEqual 2
+      expect(list.count()).to.equal 2
       list.remove 'bar'
-      expect(list.count()).toEqual 1
+      expect(list.count()).to.equal 1
 
-    it 'should remove the last item in the list', (test) ->
+    it 'should remove the last item in the list', ->
       appendTestItems 'foo', 'bar'
-      expect(list.count()).toEqual 2
+      expect(list.count()).to.equal 2
       list.removeLast()
-      expect(list.count()).toEqual 1
+      expect(list.count()).to.equal 1
       item = list.first()
-      expect(item.__POINTER__).toBe 'foo'
+      expect(item.__POINTER__).to.equal 'foo'
 
-    it 'should remove the first item in the list', (test) ->
+    it 'should remove the first item in the list', ->
       appendTestItems 'foo', 'bar'
-      expect(list.count()).toEqual 2
+      expect(list.count()).to.equal 2
       list.removeFirst()
-      expect(list.count()).toEqual 1
+      expect(list.count()).to.equal 1
       item = list.first()
-      expect(item.__POINTER__).toBe 'bar'
+      expect(item.__POINTER__).to.equal 'bar'
 
-    it 'should remove all items from the list', (test) ->
+    it 'should remove all items from the list', ->
       appendTestItems 'foo', 'bar'
-      expect(list.count()).toEqual 2
+      expect(list.count()).to.equal 2
       list.removeAll()
-      expect(list.count()).toEqual 0
-
+      expect(list.count()).to.equal 0
 
   return
 

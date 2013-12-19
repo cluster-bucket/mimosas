@@ -49,15 +49,20 @@ module.exports = (grunt) ->
               baseUrl: 'bin/'
 
     jasmine_node:
-      verbose: true
+      # verbose: true
+      # match: '.'
+      specFolders: ['spec/']
+      specNameMatcher: './spec'
       projectRoot: '.'
-      match: '.'
-      specNameMatcher: 'spec'
-      specFolders: ['test/spec']
+      requirejs: false
+      forceExit: true
       extensions: 'coffee'
       useCoffee: true
-      useHelpers: false
-      forceExit: true
+      jUnit:
+        report: false
+        savePath : './test/reports/jasmine/'
+        useDotNotation: true
+        consolidate: true
 
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-connect'
