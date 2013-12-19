@@ -9,16 +9,16 @@
     } else if (typeof exports === 'object') {
       Iterator = require('../../src/iterator.coffee');
       List = require('../../src/list.coffee');
-      return module.exports = factory(List);
+      return module.exports = factory(Iterator, List);
     } else {
       Iterator = root.Mimosas.Iterator;
       List = root.Mimosas.List;
       return factory(Iterator, List);
     }
   })(this, function(Iterator, List) {
-    describe('List', function() {
+    return describe('Iterator', function() {
       var makeIterator;
-      return makeIterator = function() {
+      makeIterator = function() {
         var item, items, iterator, list, _i, _len;
         items = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
         list = new List();
@@ -34,74 +34,65 @@
           list: list
         };
       };
-    });
-    return {
-      'should exist': function(test) {
-        test.equal(Iterator != null, true);
-        return test.done();
-      },
-      'should be done when list is empty': function(test) {
+      it('should exist', function() {
+        return expect(Iterator != null).to.be["true"];
+      });
+      it('should be done when list is empty', function() {
         var iterator, list, _ref;
         _ref = makeIterator(), iterator = _ref.iterator, list = _ref.list;
-        test.equal(iterator.isDone(), true);
-        return test.done();
-      },
-      'should throw when next is called on an empty list': function(test) {
-        var iterator, list, _ref;
+        return expect(iterator.isDone()).to.be["true"];
+      });
+      it('should throw when next is called on an empty list', function() {
+        var iterator, list, throwMe, _ref;
         _ref = makeIterator(), iterator = _ref.iterator, list = _ref.list;
-        test.throws(function() {
-          iterator.next();
+        iterator.next();
+        throwMe = function() {
           return iterator.currentItem();
-        });
-        return test.done();
-      },
-      'should not be done when created with a list that has one item': function(test) {
+        };
+        return expect(throwMe).to["throw"]();
+      });
+      it('should not be done when created with a list that has one item', function() {
         var iterator, list, _ref;
         _ref = makeIterator('foo'), iterator = _ref.iterator, list = _ref.list;
-        test.equal(iterator.isDone(), false);
-        return test.done();
-      },
-      'should be done after calling next on a list that has one item': function(test) {
+        return expect(iterator.isDone()).to.be["false"];
+      });
+      it('should be done after calling next on a list that has one item', function() {
         var iterator, list, _ref;
         _ref = makeIterator('foo'), iterator = _ref.iterator, list = _ref.list;
         iterator.next();
-        test.equal(iterator.isDone(), true);
-        return test.done();
-      },
-      'should get the correct item after calling next': function(test) {
+        return expect(iterator.isDone()).to.be["true"];
+      });
+      it('should get the correct item after calling next', function() {
         var item, iterator, list, _ref;
         _ref = makeIterator('foo', 'bar'), iterator = _ref.iterator, list = _ref.list;
         iterator.next();
         item = iterator.currentItem();
-        test.equal(item.__POINTER__, 'bar');
-        return test.done();
-      },
-      'should be done after removing all items from list': function(test) {
+        return expect(item.__POINTER__).to.equal('bar');
+      });
+      it('should be done after removing all items from list', function() {
         var iterator, list, _ref;
         _ref = makeIterator('foo', 'bar'), iterator = _ref.iterator, list = _ref.list;
         list.removeAll();
-        test.equal(iterator.isDone(), true);
-        return test.done();
-      },
-      'should go back to the first item': function(test) {
+        return expect(iterator.isDone()).to.be["true"];
+      });
+      it('should go back to the first item', function() {
         var item, iterator, list, _ref;
         _ref = makeIterator('foo', 'bar'), iterator = _ref.iterator, list = _ref.list;
         iterator.next().first();
         item = iterator.currentItem();
-        test.equal(item.__POINTER__, 'foo');
-        return test.done();
-      },
-      'should throw when getting an item that is out of bounds': function(test) {
-        var iterator, list, _ref;
+        return expect(item.__POINTER__).to.equal('foo');
+      });
+      return it('should throw when getting an item that is out of bounds', function() {
+        var iterator, list, throwMe, _ref;
         _ref = makeIterator('foo'), iterator = _ref.iterator, list = _ref.list;
         iterator.next();
-        test.throws(function() {
-          iterator.next();
+        iterator.next();
+        throwMe = function() {
           return iterator.currentItem();
-        });
-        return test.done();
-      }
-    };
+        };
+        return expect(throwMe).to["throw"];
+      });
+    });
   });
 
 }).call(this);

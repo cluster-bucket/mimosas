@@ -1,11 +1,19 @@
-Observer = require '../src/observer'
+((root, factory) ->
+  if typeof define is 'function' and define.amd
+    define ['../../bin/observer'], factory
+  else if typeof exports is 'object'
+    Observer = require '../../src/observer.coffee'
+    module.exports = factory Observer
+  else
+    Observer = root.Mimosas.Observer
+    factory Observer
+) @, (Observer) ->
 
-exports.Observer =
-  'should exist': (test) ->
-    test.equal Observer?, true
-    test.done()
+  describe 'Observer', ->
 
-  'should have a changed event': (test) ->
-    observer = new Observer()
-    test.equal observer.changed?, true
-    test.done()
+    it 'should exist', ->
+      expect(Observer).to.exist
+  
+    it 'should have a changed event', ->
+      observer = new Observer()
+      expect(observer.changed).to.exist
