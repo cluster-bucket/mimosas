@@ -20,6 +20,13 @@ task 'build:test', 'build tests', ->
   compiler.stdout.on 'data', (data) -> console.log data.toString().trim()
   compiler.stderr.on 'data', (data) -> console.error data.toString().trim()
 
+# Push the source into the README now that GitHub has property litcoffee support
+task "build:readme", "rebuild the readme file", ->
+  source = fs.readFileSync('mimosas.litcoffee').toString()
+  # source = source.replace /\n\n ([\s\S]*?)\n\n(?! )/mg, (match, code) ->
+  #   "\n```coffeescript\n#{code.replace(/^ /mg, '')}\n```\n"
+  fs.writeFileSync 'README.md', source
+
 task 'build', 'build test and source', ->
   invoke 'build:src'
   invoke 'build:test'
@@ -52,10 +59,16 @@ task 'test', 'test all the things', ->
   invoke 'test:globals'
   invoke 'test:amd'
 
-# Until GitHub has proper Literate CoffeeScript highlighting support, let's
-# manually futz the README ourselves.
-task "readme", "rebuild the readme file", ->
-  source = fs.readFileSync('mimosas.litcoffee').toString()
-  source = source.replace /\n\n ([\s\S]*?)\n\n(?! )/mg, (match, code) ->
-    "\n```coffeescript\n#{code.replace(/^ /mg, '')}\n```\n"
-  fs.writeFileSync 'README.md', source
+task 'install:components', 'install bower components', ->
+  manager = spawn './node_modules/.bin/bower', ['install']
+  manager.stdout.on 'data', (data) -> console.log data.toString().trim()
+  manager.stderr.on 'data', (data) -> console.error data.toString().trim()  
+  
+task 'install:modules', 'install node modules', ->
+  manager = spawn 'npm', ['install']
+  manager.stdout.on 'data', (data) -> console.log data.toString().trim()
+  manager.stderr.on 'data', (data) -> console.error data.toString().trim()  
+  
+task 'install', 'install all dependencies', ->
+  invoke 'install:modules'
+  invoke 'install:components'
