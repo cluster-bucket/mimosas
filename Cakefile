@@ -62,13 +62,13 @@ task 'test', 'test all the things', ->
 task 'install:components', 'install bower components', ->
   manager = spawn './node_modules/.bin/bower', ['install']
   manager.stdout.on 'data', (data) -> console.log data.toString().trim()
-  manager.stderr.on 'data', (data) -> console.error data.toString().trim()  
-  
+  manager.stderr.on 'data', (data) -> console.error data.toString().trim()
+
 task 'install:modules', 'install node modules', ->
   manager = spawn 'npm', ['install']
   manager.stdout.on 'data', (data) -> console.log data.toString().trim()
-  manager.stderr.on 'data', (data) -> console.error data.toString().trim()  
-  
+  manager.stderr.on 'data', (data) -> console.error data.toString().trim()
+
 task 'install', 'install all dependencies', ->
   invoke 'install:modules'
   invoke 'install:components'
