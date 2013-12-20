@@ -17,3 +17,7 @@
     it 'should have a changed event', ->
       observer = new Observer()
       expect(observer.changed).to.exist
+      
+    it 'should have a pointer', ->
+      observer = new Observer()
+      expect(observer.__POINTER__).to.exist
