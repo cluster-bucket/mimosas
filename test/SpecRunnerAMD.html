@@ -1,20 +1,26 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="bower_components/mocha/mocha.css" />
+    <link rel="stylesheet" href="../bower_components/mocha/mocha.css" />
   </head>
   <body>
     <div id="mocha"></div>
-    <script src="bower_components/mocha/mocha.js"></script>
-    <script src="bower_components/chai/chai.js"></script>
+    <script src="../bower_components/mocha/mocha.js"></script>
+    <script src="../bower_components/chai/chai.js"></script>
     <script>
       mocha.ui('bdd');
       mocha.reporter('html');
       expect = chai.expect;
     </script>
-    <script src="bower_components/requirejs/require.js"></script>
+    <script src="../bower_components/requirejs/require.js"></script>
     <script>
-      require(['bin/list.spec', 'bin/iterator.spec', 'bin/observer.spec'], function () {
+      require([
+        'bin/list.spec', 
+        'bin/iterator.spec', 
+        'bin/observer.spec',
+        'bin/subject.spec',
+        'bin/guid.spec'
+      ], function () {
         if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
         else { mocha.run(); }
       });

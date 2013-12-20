@@ -16,10 +16,15 @@
       it('should exist', function() {
         return expect(Observer).to.exist;
       });
-      return it('should have a changed event', function() {
+      it('should have a changed event', function() {
         var observer;
         observer = new Observer();
         return expect(observer.changed).to.exist;
+      });
+      return it('should have a pointer', function() {
+        var observer;
+        observer = new Observer();
+        return expect(observer.__POINTER__).to.exist;
       });
     });
   });

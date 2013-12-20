@@ -2,9 +2,28 @@
 <html>
     <head>
         <title>Example</title>
-        <!-- data-main attribute tells require.js to load
-             scripts/main.js after require.js loads. -->
-        <script data-main="app" src="lib/require.js"></script>
+        <script src="../bower_components/requirejs/require.js"></script>
+        <script>
+          require.config({
+            packages: [
+              {
+                name: 'cs',
+                location: '../bower_components/require-cs',
+                main: 'cs'
+              },
+              {
+                name: 'coffee-script',
+                location: '../bower_components/coffee-script/extras',
+                main: 'coffee-script'
+              },
+              {
+                name: 'mimosas',
+                location: '../bin'
+              }
+            ]
+          });
+          require(['cs!app'], function () {});
+        </script>
     </head>
     <body></body>
 </html>
