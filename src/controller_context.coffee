@@ -43,11 +43,11 @@
     bindEvent: (selector, type) ->
       element = @view.getElement()
       element.addEventListener(type, @trigger.bind(@, selector, type), false)
-      # TODO: Bind addEventListener to element, and watch bubbled events for the
-      # one the user specified (so that non-existent elements can be bound)
-      #nodes = element.querySelectorAll selector
-      #if nodes.length > 0
-        #nodes[0].addEventListener(type, @trigger.bind(@), false)
-      #return
+      
+    setModel: (model) ->
+      @strategy.setModel model
+      
+    getModel: () ->
+      @strategy.getModel()
       
   ControllerContext

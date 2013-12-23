@@ -62,6 +62,14 @@
         return element.addEventListener(type, this.trigger.bind(this, selector, type), false);
       };
 
+      ControllerContext.prototype.setModel = function(model) {
+        return this.strategy.setModel(model);
+      };
+
+      ControllerContext.prototype.getModel = function() {
+        return this.strategy.getModel();
+      };
+
       return ControllerContext;
 
     })();
