@@ -3,29 +3,30 @@
   (function(root, factory) {
     var Guid;
     if (typeof define === 'function' && define.amd) {
-      return define(['./guid'], factory);
+      define(['./guid'], factory);
     } else if (typeof exports === 'object') {
       Guid = require('./guid');
-      return module.exports = factory(Guid);
+      module.exports = factory(Guid);
     } else {
       if (root.Mimosas == null) {
         root.Mimosas = {};
       }
       Guid = root.Mimosas.Guid;
-      return root.Mimosas.Observer = factory(Guid);
+      root.Mimosas.ViewObserver = factory(Guid);
     }
   })(this, function(Guid) {
-    var Observer;
-    return Observer = (function() {
-      function Observer() {
+    var ViewObserver;
+    ViewObserver = (function() {
+      function ViewObserver() {
         this.__POINTER__ = Guid.generate();
       }
 
-      Observer.prototype.changed = function(theChangedSubject) {};
+      ViewObserver.prototype.changed = function(theChangedSubject) {};
 
-      return Observer;
+      return ViewObserver;
 
     })();
+    return ViewObserver;
   });
 
 }).call(this);

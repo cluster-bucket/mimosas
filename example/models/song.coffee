@@ -22,3 +22,10 @@ define [], () ->
     addAlbum: (@album) ->
     getAlbum: () ->
       @album
+      
+    serialize: () ->
+      song =
+        title: @getTitle()
+        album: @getAlbum()
+        artist: @getArtist()
+      song

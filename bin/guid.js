@@ -2,18 +2,18 @@
 (function() {
   (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
-      return define(factory);
+      define(factory);
     } else if (typeof exports === 'object') {
-      return module.exports = factory();
+      module.exports = factory();
     } else {
       if (root.Mimosas == null) {
         root.Mimosas = {};
       }
-      return root.Mimosas.Guid = factory();
+      root.Mimosas.Guid = factory();
     }
   })(this, function() {
     var Guid;
-    return Guid = (function() {
+    Guid = (function() {
       function Guid() {}
 
       Guid.generate = function() {
@@ -27,6 +27,7 @@
       return Guid;
 
     })();
+    return Guid;
   });
 
 }).call(this);

@@ -10,6 +10,11 @@ startServer = () ->
   server.unref()
   server
 
+task 'clean', 'clean the build directories', ->
+  cmd = 'rm -rf ./bin/* && rm -rf ./test/bin/*'
+  exec cmd, (err, stdout, stderr) ->
+    if err then console.error stderr else console.log stdout
+
 task 'build:src', 'build the source', ->
   compiler = spawn 'coffee', ['-o', 'bin/', '-c', 'src/']
   compiler.stdout.on 'data', (data) -> console.log data.toString().trim()
@@ -28,6 +33,7 @@ task "build:readme", "rebuild the readme file", ->
   fs.writeFileSync 'README.md', source
 
 task 'build', 'build test and source', ->
+  invoke 'clean'
   invoke 'build:src'
   invoke 'build:test'
 

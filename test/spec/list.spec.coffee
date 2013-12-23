@@ -1,12 +1,15 @@
 ((root, factory) ->
   if typeof define is 'function' and define.amd
     define ['../../bin/list'], factory
+    return
   else if typeof exports is 'object'
     List = require '../../src/list.coffee'
     module.exports = factory List
+    return
   else
     List = root.Mimosas.List
     factory List
+    return
 ) @, (List) ->
 
   describe 'List', ->

@@ -5,13 +5,13 @@
   (function(root, factory) {
     var List;
     if (typeof define === 'function' && define.amd) {
-      return define(['../../bin/list'], factory);
+      define(['../../bin/list'], factory);
     } else if (typeof exports === 'object') {
       List = require('../../src/list.coffee');
-      return module.exports = factory(List);
+      module.exports = factory(List);
     } else {
       List = root.Mimosas.List;
-      return factory(List);
+      factory(List);
     }
   })(this, function(List) {
     describe('List', function() {

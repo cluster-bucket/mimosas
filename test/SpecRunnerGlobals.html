@@ -5,6 +5,7 @@
   </head>
   <body>
     <div id="mocha"></div>
+    <div id="fixture"></div>
     <script src="../bower_components/mocha/mocha.js"></script>
     <script src="../bower_components/chai/chai.js"></script>
     <script>
@@ -16,14 +17,20 @@
     <script src="../bin/list.js"></script>
     <script src="../bin/iterator.js"></script>
     <script src="../bin/guid.js"></script>
-    <script src="../bin/observer.js"></script>
-    <script src="../bin/subject.js"></script>
+    <script src="../bin/model_subject.js"></script>
+    <script src="../bin/view_observer.js"></script>
+    <script src="../bin/view_component.js"></script>
+    <script src="../bin/view_composite.js"></script>
+    <script src="../bin/view_leaf.js"></script>
     <!-- Specs -->
     <script src="bin/list.spec.js"></script>
     <script src="bin/iterator.spec.js"></script>
-    <script src="bin/observer.spec.js"></script>
-    <script src="bin/subject.spec.js"></script>
     <script src="bin/guid.spec.js"></script>
+    <script src="bin/model_subject.spec.js"></script>
+    <script src="bin/view_observer.spec.js"></script>
+    <script src="bin/view_component.spec.js"></script>
+    <script src="bin/view_leaf.spec.js"></script>
+    <script src="bin/view_composite.spec.js"></script>
     <script>
       if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
       else { mocha.run(); }

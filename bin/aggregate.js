@@ -2,18 +2,18 @@
 (function() {
   (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
-      return define(['iterator'], factory);
+      define(['iterator'], factory);
     } else if (typeof exports === 'object') {
-      return module.exports = factory(require('iterator'));
+      module.exports = factory(require('iterator'));
     } else {
       if (root.Mimosas == null) {
         root.Mimosas = {};
       }
-      return root.Mimosas.Aggregate = factory(root.Mimosas.Iterator);
+      root.Mimosas.Aggregate = factory(root.Mimosas.Iterator);
     }
   })(this, function(Iterator) {
     var Aggregate;
-    return Aggregate = (function() {
+    Aggregate = (function() {
       function Aggregate() {}
 
       Aggregate.prototype.createIterator = function(items) {
@@ -30,6 +30,7 @@
       return Aggregate;
 
     })();
+    return Aggregate;
   });
 
 }).call(this);

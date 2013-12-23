@@ -2,18 +2,18 @@
 (function() {
   (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
-      return define(factory);
+      define(factory);
     } else if (typeof exports === 'object') {
-      return module.exports = factory();
+      module.exports = factory();
     } else {
       if (root.Mimosas == null) {
         root.Mimosas = {};
       }
-      return root.Mimosas.Iterator = factory();
+      root.Mimosas.Iterator = factory();
     }
   })(this, function() {
     var Iterator;
-    return Iterator = (function() {
+    Iterator = (function() {
       function Iterator(list) {
         this.list = list;
         this.current = 0;
@@ -43,6 +43,7 @@
       return Iterator;
 
     })();
+    return Iterator;
   });
 
 }).call(this);

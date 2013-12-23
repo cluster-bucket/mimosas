@@ -1,11 +1,14 @@
 ((root, factory) ->
   if typeof define is 'function' and define.amd
     define factory
+    return
   else if typeof exports is 'object'
     module.exports = factory()
+    return
   else
     root.Mimosas = {} unless root.Mimosas?
     root.Mimosas.Guid = factory()
+    return
 ) @, () ->
   
   # http://stackoverflow.com/a/105074
@@ -15,3 +18,5 @@
       S4 = () ->
         (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
       "#{S4()}#{S4()}-#{S4()}-#{S4()}-#{S4()}-#{S4()}#{S4()}#{S4()}"
+      
+  Guid
