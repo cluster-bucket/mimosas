@@ -32,12 +32,16 @@
       getController: () ->
         @controller
         
+      setModel: (@model) ->
+        @model.attach @
+        
       setElement: (selector) ->
         if selector.charAt(0) is '#'
           @element = document.getElementById selector.slice 1
         else
           @element = document.querySelectorAll selector
         
-      getElement: () -> @element
+      getElement: () -> 
+        @element
         
     ViewComponent
