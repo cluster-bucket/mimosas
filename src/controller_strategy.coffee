@@ -12,5 +12,7 @@
 ) @, () ->
 
   class ControllerStrategy
+    setModel: (@model) ->
+    getModel: () -> @model
 
   ControllerStrategy

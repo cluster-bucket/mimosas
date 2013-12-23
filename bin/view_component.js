@@ -4,22 +4,24 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   (function(root, factory) {
-    var ControllerContex, ViewObserver;
+    var ControllerContex, ControllerStrategy, ViewObserver;
     if (typeof define === 'function' && define.amd) {
-      define(['./view_observer', './controller_context'], factory);
+      define(['./view_observer', './controller_context', './controller_strategy'], factory);
     } else if (typeof exports === 'object') {
       ViewObserver = require('./view_observer');
       ControllerContex = require('./controller_context');
-      module.exports = factory(ViewObserver, ControllerContex);
+      ControllerStrategy = require('./controller_strategy');
+      module.exports = factory(ViewObserver, ControllerContex, ControllerStrategy);
     } else {
       if (root.Mimosas == null) {
         root.Mimosas = {};
       }
       ViewObserver = root.Mimosas.ViewObserver;
       ControllerContex = root.Mimosas.ControllerContex;
-      root.Mimosas.ViewComponent = factory(ViewObserver, ControllerContex);
+      ControllerStrategy = root.Mimosas.ControllerStrategy;
+      root.Mimosas.ViewComponent = factory(ViewObserver, ControllerContex, ControllerStrategy);
     }
-  })(this, function(ViewObserver, ControllerContex) {
+  })(this, function(ViewObserver, ControllerContex, ControllerStrategy) {
     var ViewComponent;
     ViewComponent = (function(_super) {
       __extends(ViewComponent, _super);
@@ -27,6 +29,7 @@
       function ViewComponent(selector) {
         ViewComponent.__super__.constructor.apply(this, arguments);
         this.setElement(selector);
+        this.controller = new ControllerContex(new ControllerStrategy());
       }
 
       ViewComponent.prototype.setParent = function(parent) {
@@ -39,7 +42,10 @@
 
       ViewComponent.prototype.setController = function(controller) {
         this.controller = new ControllerContex(controller);
-        return this.controller.setView(this);
+        this.controller.setView(this);
+        if (this.model != null) {
+          return this.controller.setModel(this.model);
+        }
       };
 
       ViewComponent.prototype.getController = function() {
@@ -48,7 +54,10 @@
 
       ViewComponent.prototype.setModel = function(model) {
         this.model = model;
-        return this.model.attach(this);
+        this.model.attach(this);
+        if (this.controller != null) {
+          return this.controller.setModel(this.model);
+        }
       };
 
       ViewComponent.prototype.setElement = function(selector) {

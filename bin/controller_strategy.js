@@ -16,6 +16,14 @@
     ControllerStrategy = (function() {
       function ControllerStrategy() {}
 
+      ControllerStrategy.prototype.setModel = function(model) {
+        this.model = model;
+      };
+
+      ControllerStrategy.prototype.getModel = function() {
+        return this.model;
+      };
+
       return ControllerStrategy;
 
     })();

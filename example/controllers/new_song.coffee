@@ -8,4 +8,10 @@ define [
       
     onSubmit: (e) ->
       e.preventDefault()
-      console.log 'New song', e
+      
+      model = {}
+      for element in e.target.elements
+        continue unless element.name
+        model[element.name] = element.value
+      
+      @getModel().addSong model

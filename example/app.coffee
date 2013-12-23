@@ -6,31 +6,26 @@ define [
   'cs!controllers/new_song'
 ], (PageView, SongsView, NewSongView, SongCollection, NewSongController) ->
 
-  class App
-    @run = () ->
-      page = new PageView '#page'
-      songsView = new SongsView '#songs'
-      newSongView = new NewSongView '#new-song'
-      
-      newSongView.setController new NewSongController()
-    
-      songCollection = new SongCollection()
-      songsView.setModel songCollection
-      newSongView.setModel songCollection
+  pageView = new PageView '#page'
+  songsView = new SongsView '#songs'
+  newSongView = new NewSongView '#new-song'
+  
+  newSongView.setController new NewSongController()
 
-      page.add songsView
-      page.add newSongView
-      page.display()
+  songCollection = new SongCollection()
+  songsView.setModel songCollection
+  newSongView.setModel songCollection
 
-      songCollection.addSong
-        title: 'Time After Time'
-        artist: 'Cyndi Lauper'
-        album: 'She\'s So Unusual'
-    
-      songCollection.addSong
-        title: 'You Belong to the City'
-        artist: 'Glen Frey'
-        album: 'Miami Vice Soundtrack'
+  pageView.add songsView
+  pageView.add newSongView
+  pageView.display()
 
-  # window.document.addEventListener 'DOMContentLoaded', () ->
-  App.run()
+  #songCollection.addSong
+    #title: 'Time After Time'
+    #artist: 'Cyndi Lauper'
+    #album: 'She\'s So Unusual'
+
+  songCollection.addSong
+    title: 'You Belong to the City'
+    artist: 'Glen Frey'
+    album: 'Miami Vice Soundtrack'
