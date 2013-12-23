@@ -13,11 +13,19 @@
 
   class ControllerContext
     constructor: (@strategy) ->
-    
-    trigger: (e) ->
-      method = @makeAlgorithmInterfaceName e.type
+
+    trigger: (selector, type, e) ->
+      return unless @isValidEvent.apply @, arguments
+      method = @makeAlgorithmInterfaceName type
       if @strategy[method]?
-        @strategy[method].apply(@strategy, e)
+        @strategy[method].call(@strategy, e)
+        
+    isValidEvent: (selector, type, e) ->
+      element = @view.getElement()
+      nodes = element.querySelectorAll selector
+      isChild = nodes.length > 0
+      isType = @strategy.events[selector] is e.type
+      isChild and isType
         
     # http://stackoverflow.com/a/1026087
     makeAlgorithmInterfaceName: (string) ->
@@ -34,9 +42,12 @@
       
     bindEvent: (selector, type) ->
       element = @view.getElement()
-      nodes = element.querySelectorAll selector
-      if nodes.length > 0
-        nodes[0].addEventListener(type, @trigger.bind(@), false)
-      return
+      element.addEventListener(type, @trigger.bind(@, selector, type), false)
+      # TODO: Bind addEventListener to element, and watch bubbled events for the
+      # one the user specified (so that non-existent elements can be bound)
+      #nodes = element.querySelectorAll selector
+      #if nodes.length > 0
+        #nodes[0].addEventListener(type, @trigger.bind(@), false)
+      #return
       
   ControllerContext

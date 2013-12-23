@@ -18,12 +18,24 @@
         this.strategy = strategy;
       }
 
-      ControllerContext.prototype.trigger = function(e) {
+      ControllerContext.prototype.trigger = function(selector, type, e) {
         var method;
-        method = this.makeAlgorithmInterfaceName(e.type);
-        if (this.strategy[method] != null) {
-          return this.strategy[method].apply(this.strategy, e);
+        if (!this.isValidEvent.apply(this, arguments)) {
+          return;
         }
+        method = this.makeAlgorithmInterfaceName(type);
+        if (this.strategy[method] != null) {
+          return this.strategy[method].call(this.strategy, e);
+        }
+      };
+
+      ControllerContext.prototype.isValidEvent = function(selector, type, e) {
+        var element, isChild, isType, nodes;
+        element = this.view.getElement();
+        nodes = element.querySelectorAll(selector);
+        isChild = nodes.length > 0;
+        isType = this.strategy.events[selector] === e.type;
+        return isChild && isType;
       };
 
       ControllerContext.prototype.makeAlgorithmInterfaceName = function(string) {
@@ -45,12 +57,9 @@
       };
 
       ControllerContext.prototype.bindEvent = function(selector, type) {
-        var element, nodes;
+        var element;
         element = this.view.getElement();
-        nodes = element.querySelectorAll(selector);
-        if (nodes.length > 0) {
-          nodes[0].addEventListener(type, this.trigger.bind(this), false);
-        }
+        return element.addEventListener(type, this.trigger.bind(this, selector, type), false);
       };
 
       return ControllerContext;

@@ -46,6 +46,11 @@
         return this.controller;
       };
 
+      ViewComponent.prototype.setModel = function(model) {
+        this.model = model;
+        return this.model.attach(this);
+      };
+
       ViewComponent.prototype.setElement = function(selector) {
         if (selector.charAt(0) === '#') {
           return this.element = document.getElementById(selector.slice(1));
