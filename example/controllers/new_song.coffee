@@ -1,8 +1,8 @@
 define [
-  'mimosas/strategy'
-], (Strategy) ->
+  'mimosas/controller_strategy'
+], (ControllerStrategy) ->
   
-  class NewSongController extends Strategy
+  class NewSongController extends ControllerStrategy
     events: 
       '#new-song__form': 'submit'
       

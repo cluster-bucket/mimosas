@@ -1,10 +1,10 @@
 define [
-  'mimosas/composite'
+  'mimosas/view_composite'
   'mimosas/iterator'
   'handlebars'
-], (Composite, Iterator, Handlebars) ->
+], (ViewComposite, Iterator, Handlebars) ->
   
-  class Page extends Composite
+  class Page extends ViewComposite
     constructor: () ->
       super
       @iterator = new Iterator @list

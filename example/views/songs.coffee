@@ -1,9 +1,9 @@
 define [
-  'mimosas/leaf'
+  'mimosas/view_leaf'
   'handlebars'
-], (Leaf, Handlebars) ->
+], (ViewLeaf, Handlebars) ->
   
-  class SongsView extends Leaf
+  class SongsView extends ViewLeaf
 
     changed: (collection) ->
       @display collection

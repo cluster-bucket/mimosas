@@ -1,6 +1,6 @@
-define ['mimosas/subject', 'cs!../models/song'], (Subject, Song) ->
+define ['mimosas/model_subject', 'cs!../models/song'], (ModelSubject, Song) ->
   
-  class SongCollection extends Subject
+  class SongCollection extends ModelSubject
     constructor: () ->
       @collection = []
       super
