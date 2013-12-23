@@ -2,18 +2,18 @@
 (function() {
   (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
-      return define(factory);
+      define(factory);
     } else if (typeof exports === 'object') {
-      return module.exports = factory();
+      module.exports = factory();
     } else {
       if (root.Mimosas == null) {
         root.Mimosas = {};
       }
-      return root.Mimosas.List = factory();
+      root.Mimosas.List = factory();
     }
   })(this, function() {
     var List;
-    return List = (function() {
+    List = (function() {
       function List() {
         var items, pointers;
         pointers = [];
@@ -89,6 +89,7 @@
       return List;
 
     })();
+    return List;
   });
 
 }).call(this);

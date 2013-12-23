@@ -22,7 +22,8 @@
     "coffee-script": "~1.6.3",
     "jquery": "~2.0.3",
     "todomvc-common": "~0.1.9",
-    "require-cs": "~0.4.4"
+    "require-cs": "~0.4.4",
+    "handlebars": "~1.1.2"
   },
   "resolutions": {
     "coffee-script": "~1.6.3"

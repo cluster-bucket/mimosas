@@ -17,9 +17,12 @@
       require([
         'bin/list.spec', 
         'bin/iterator.spec', 
-        'bin/observer.spec',
-        'bin/subject.spec',
-        'bin/guid.spec'
+        'bin/guid.spec',
+        'bin/model_subject.spec',
+        'bin/view_observer.spec',
+        'bin/view_component.spec',
+        'bin/view_composite.spec',
+        'bin/view_leaf.spec'
       ], function () {
         if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
         else { mocha.run(); }

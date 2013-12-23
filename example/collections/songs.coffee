@@ -10,3 +10,9 @@ define ['mimosas/subject', 'cs!../models/song'], (Subject, Song) ->
         @notify()
     getSongs: () ->
       @collection
+      
+    serialize: () ->
+      songs = []
+      for song in @collection
+        songs.push song.serialize()
+      songs

@@ -1,11 +1,14 @@
 ((root, factory) ->
   if typeof define is 'function' and define.amd
     define factory
+    return
   else if typeof exports is 'object'
     module.exports = factory()
+    return
   else
     root.Mimosas = {} unless root.Mimosas?
     root.Mimosas.Iterator = factory()
+    return
 ) @, () ->
   
   class Iterator
@@ -23,3 +26,4 @@
       throw new Error "IteratorOutOfBounds" if @isDone()
       @list.getByIndex @current
       
+  Iterator

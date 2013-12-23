@@ -5,15 +5,15 @@
   (function(root, factory) {
     var Iterator, List;
     if (typeof define === 'function' && define.amd) {
-      return define(['../../bin/iterator', '../../bin/list'], factory);
+      define(['../../bin/iterator', '../../bin/list'], factory);
     } else if (typeof exports === 'object') {
       Iterator = require('../../src/iterator.coffee');
       List = require('../../src/list.coffee');
-      return module.exports = factory(Iterator, List);
+      module.exports = factory(Iterator, List);
     } else {
       Iterator = root.Mimosas.Iterator;
       List = root.Mimosas.List;
-      return factory(Iterator, List);
+      factory(Iterator, List);
     }
   })(this, function(Iterator, List) {
     return describe('Iterator', function() {

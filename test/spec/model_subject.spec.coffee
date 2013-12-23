@@ -1,20 +1,23 @@
 ((root, factory) ->
   if typeof define is 'function' and define.amd
-    define ['../../bin/subject'], factory
+    define ['../../bin/model_subject'], factory
+    return
   else if typeof exports is 'object'
-    List = require '../../src/subject.coffee'
+    List = require '../../src/model_subject.coffee'
     module.exports = factory List
+    return
   else
-    Subject = root.Mimosas.Subject
-    factory Subject
-) @, (Subject) ->
+    ModelSubject = root.Mimosas.ModelSubject
+    factory ModelSubject
+    return
+) @, (ModelSubject) ->
 
-  describe 'Subject', ->
+  describe 'ModelSubject', ->
     
     subject = undefined
     
     beforeEach ->
-      subject = new Subject()
+      subject = new ModelSubject()
     
     afterEach ->
       subject = undefined
@@ -23,7 +26,7 @@
       __POINTER__: pointer, changed: callback or ->
       
     it 'should exist', ->
-      expect(Subject).to.exist
+      expect(ModelSubject).to.exist
       
     it 'should attach an item', ->
       expect(subject.observers.count()).to.equal 0

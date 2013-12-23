@@ -1,14 +1,17 @@
 ((root, factory) ->
   if typeof define is 'function' and define.amd
     define ['../../bin/iterator', '../../bin/list'], factory
+    return
   else if typeof exports is 'object'
     Iterator = require '../../src/iterator.coffee'
     List = require '../../src/list.coffee'
     module.exports = factory Iterator, List
+    return
   else
     Iterator = root.Mimosas.Iterator
     List = root.Mimosas.List
     factory Iterator, List
+    return
 ) @, (Iterator, List) ->
 
   describe 'Iterator', ->

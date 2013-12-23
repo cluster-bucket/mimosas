@@ -3,13 +3,13 @@
   (function(root, factory) {
     var Guid, List;
     if (typeof define === 'function' && define.amd) {
-      return define(['../../bin/guid'], factory);
+      define(['../../bin/guid'], factory);
     } else if (typeof exports === 'object') {
       List = require('../../src/guid.coffee');
-      return module.exports = factory(List);
+      module.exports = factory(List);
     } else {
       Guid = root.Mimosas.Guid;
-      return factory(Guid);
+      factory(Guid);
     }
   })(this, function(Guid) {
     return describe('Guid', function() {

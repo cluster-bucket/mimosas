@@ -2,28 +2,149 @@
 <html>
     <head>
         <title>Example</title>
-        <script src="../bower_components/requirejs/require.js"></script>
-        <script>
-          require.config({
-            packages: [
-              {
-                name: 'cs',
-                location: '../bower_components/require-cs',
-                main: 'cs'
-              },
-              {
-                name: 'coffee-script',
-                location: '../bower_components/coffee-script/extras',
-                main: 'coffee-script'
-              },
-              {
-                name: 'mimosas',
-                location: '../bin'
-              }
-            ]
-          });
-          require(['cs!app'], function () {});
-        </script>
+        <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,900' rel='stylesheet' type='text/css'>
+        <style>
+          body {
+            font-family: 'Titillium Web', sans-serif; 
+            line-height: .6;
+            color: #333;
+            font-size: 6em;
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: .7;
+            margin: 0;
+            padding: 0 10px;
+            background: transparent;
+          }
+          
+          h1 {
+            line-height: .7;
+            margin: 0;
+            padding: 0;
+          }
+          
+          .form-field {
+            height: 120px;
+            overflow: hidden;
+            border-bottom: 2px solid #ddd;
+          }
+          
+          .form-controls {
+            
+          }
+          
+          label {
+            color: DarkBlue;
+            font-size: 100px;
+            width: 325px;
+            display: inline-block;
+          }
+          
+          input {
+            width: 800px;
+            font-family: 'Titillium Web', sans-serif;
+            font-size: 100px;
+            color: #444;
+            border: none;
+            text-transform: uppercase;
+            font-weight: 900;
+            color: DeepPink;
+            background: transparent;
+            padding: 0;
+            margin: 0 0 0 .25em;
+          }
+          
+          button {
+            border: none;
+            background: Gold;
+            color: #111;
+            font-size: .8em;
+            font-family: 'Titillium Web', sans-serif;
+            font-weight: 900;
+            line-height: 1;
+            float: right;
+            margin-top: -40px;
+            text-transform: uppercase;
+          }
+          
+          #songs {
+            color: SpringGreen;
+            margin-top: 40px;
+            font-size: .6em;
+          }
+          
+          .song {
+            display: inline-block;
+            margin-right: 10px;
+          }
+        </style>
     </head>
-    <body></body>
+    <body>
+    
+      <div id="page">
+        <h1>80<small>s</small> Playlist</h1>
+        <div id="new-song"></div>
+        <div id="songs"></div>
+      </div>
+    
+      <script id="new-song-template" type="text/x-handlebars-template">
+        <form id="new-song__form">
+          <div class="form-field">
+            <label>Track</label><input type="text" value="Time after time" />
+          </div>
+          <div class="form-field">
+            <label>Artist</label><input type="text" value="Cindy Lauper" />
+          </div>
+          <div class="form-controls">
+            <button type="submit">Add</button>
+          </div>
+        </form>
+      </script>
+      
+      <script id="songs-template" type="text/x-handlebars-template">
+      {{#each songs}}
+        <span class="songs__song song">{{title}} by {{artist}}</span>
+      {{/each}}
+      </script>
+      
+      <script src="../bower_components/requirejs/require.js"></script>
+      <script>
+        require.config({
+          paths: {
+            handlebars: '../bower_components/handlebars/handlebars'
+          },
+          shim: {
+            handlebars: {
+              deps: [],
+              exports: 'Handlebars',
+              init: function () {
+                return Handlebars;
+              }
+            }
+          },
+          packages: [
+            {
+              name: 'cs',
+              location: '../bower_components/require-cs',
+              main: 'cs'
+            },
+            {
+              name: 'coffee-script',
+              location: '../bower_components/coffee-script/extras',
+              main: 'coffee-script'
+            },
+            {
+              name: 'handlebars',
+              location: '../bower_components/handlebars',
+              main: 'handlebars'
+            },
+            {
+              name: 'mimosas',
+              location: '../bin'
+            }
+          ]
+        });
+        require(['cs!app'], function () {});
+      </script>
+    </body>
 </html>

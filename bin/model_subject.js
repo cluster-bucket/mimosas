@@ -3,35 +3,35 @@
   (function(root, factory) {
     var Iterator, List;
     if (typeof define === 'function' && define.amd) {
-      return define(['./list', './iterator'], factory);
+      define(['./list', './iterator'], factory);
     } else if (typeof exports === 'object') {
       List = require('./list');
       Iterator = require('./iterator');
-      return module.exports = factory(List, Iterator);
+      module.exports = factory(List, Iterator);
     } else {
       if (root.Mimosas == null) {
         root.Mimosas = {};
       }
       List = root.Mimosas.List;
       Iterator = root.Mimosas.Iterator;
-      return root.Mimosas.Subject = factory(List, Iterator);
+      root.Mimosas.ModelSubject = factory(List, Iterator);
     }
   })(this, function(List, Iterator) {
-    var Subject;
-    return Subject = (function() {
-      function Subject() {
+    var ModelSubject;
+    ModelSubject = (function() {
+      function ModelSubject() {
         this.observers = new List();
       }
 
-      Subject.prototype.attach = function(obj) {
+      ModelSubject.prototype.attach = function(obj) {
         return this.observers.append(obj);
       };
 
-      Subject.prototype.detach = function(observer) {
+      ModelSubject.prototype.detach = function(observer) {
         return this.observers.remove(observer);
       };
 
-      Subject.prototype.notify = function() {
+      ModelSubject.prototype.notify = function() {
         var i, _results;
         i = new Iterator(this.observers);
         _results = [];
@@ -42,9 +42,10 @@
         return _results;
       };
 
-      return Subject;
+      return ModelSubject;
 
     })();
+    return ModelSubject;
   });
 
 }).call(this);
