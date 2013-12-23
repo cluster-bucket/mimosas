@@ -1,9 +1,9 @@
 define [
-  'mimosas/leaf'
+  'mimosas/view_leaf'
   'handlebars'
-], (Leaf, Handlebars) ->
+], (ViewLeaf, Handlebars) ->
   
-  class NewSongView extends Leaf
+  class NewSongView extends ViewLeaf
 
     display: (collection) ->
       @getElement().innerHTML = @toHtml()
