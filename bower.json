@@ -17,15 +17,5 @@
     "requirejs": "~2.1.9",
     "mocha": "~1.15.1",
     "chai": "~1.8.1"
-  },
-  "dependencies": {
-    "coffee-script": "~1.6.3",
-    "jquery": "~2.0.3",
-    "todomvc-common": "~0.1.9",
-    "require-cs": "~0.4.4",
-    "handlebars": "~1.1.2"
-  },
-  "resolutions": {
-    "coffee-script": "~1.6.3"
   }
 }

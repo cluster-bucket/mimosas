@@ -22,7 +22,7 @@
         
     isValidEvent: (selector, type, e) ->
       element = @view.getElement()
-      nodes = element.querySelectorAll selector
+      nodes = element.parentNode.querySelectorAll selector
       isChild = nodes.length > 0
       isType = @strategy.events[selector] is e.type
       isChild and isType

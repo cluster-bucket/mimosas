@@ -32,7 +32,7 @@
       ControllerContext.prototype.isValidEvent = function(selector, type, e) {
         var element, isChild, isType, nodes;
         element = this.view.getElement();
-        nodes = element.querySelectorAll(selector);
+        nodes = element.parentNode.querySelectorAll(selector);
         isChild = nodes.length > 0;
         isType = this.strategy.events[selector] === e.type;
         return isChild && isType;
