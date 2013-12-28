@@ -27,7 +27,7 @@
 
       ControllerStrategy.prototype.addEvent = function(eventName, selector, method) {
         var item, __POINTER__;
-        __POINTER__ = [].slice.call(arguments, 0).join('#');
+        __POINTER__ = this.getPointerFromArgs(arguments);
         item = {
           __POINTER__: __POINTER__,
           selector: selector,
@@ -39,12 +39,23 @@
 
       ControllerStrategy.prototype.removeEvent = function(eventName, selector, method) {
         var __POINTER__;
-        __POINTER__ = [].slice.call(arguments, 0).join('#');
+        __POINTER__ = this.getPointerFromArgs(arguments);
         return this.events.remove(__POINTER__);
       };
 
       ControllerStrategy.prototype.getEventIterator = function() {
         return new Iterator(this.events);
+      };
+
+      ControllerStrategy.prototype.hasEvent = function(eventName, selector, method) {
+        var item, __POINTER__;
+        __POINTER__ = this.getPointerFromArgs(arguments);
+        item = this.events.get(__POINTER__);
+        return item != null;
+      };
+
+      ControllerStrategy.prototype.getPointerFromArgs = function() {
+        return [].slice.call(arguments, 0).join('/');
       };
 
       ControllerStrategy.prototype.setModel = function(model) {

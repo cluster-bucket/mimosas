@@ -5,6 +5,7 @@
   </head>
   <body>
     <div id="mocha"></div>
+    <div id="fixture"></div>
     <script src="../bower_components/mocha/mocha.js"></script>
     <script src="../bower_components/chai/chai.js"></script>
     <script>
@@ -22,7 +23,8 @@
         'bin/view_observer.spec',
         'bin/view_component.spec',
         'bin/view_composite.spec',
-        'bin/view_leaf.spec'
+        'bin/view_leaf.spec',
+        'bin/controller_context.spec'
       ], function () {
         if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
         else { mocha.run(); }
