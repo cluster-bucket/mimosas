@@ -42,6 +42,7 @@
 
       ViewComponent.prototype.setController = function(controller) {
         this.controller = new ControllerContex(controller);
+        this.controller.init();
         this.controller.setView(this);
         if (this.model != null) {
           return this.controller.setModel(this.model);

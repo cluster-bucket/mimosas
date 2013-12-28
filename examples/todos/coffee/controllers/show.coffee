@@ -1,7 +1,7 @@
 define ['mimosas/controller_strategy'], (ControllerStrategy) ->
   class ShowTodoController extends ControllerStrategy
-    events:
-      'input[type="checkbox"]': 'click'
+    init: () ->
+      @addEvent 'click', 'input[type="checkbox"]', 'checkboxClicked'
       
-    onClick: (e) ->
+    checkboxClicked: (e) ->
       @getModel().setCompleted e.target.checked

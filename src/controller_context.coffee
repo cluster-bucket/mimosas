@@ -14,9 +14,13 @@
   class ControllerContext
     constructor: (@strategy) ->
 
-    trigger: (selector, type, e) ->
+    # Init is here to prevent inadvertently clobbering the constructor 
+    # functionality by not using super in the extended class. 
+    init: () ->
+      @strategy.init()
+
+    trigger: (selector, type, method, e) ->
       return unless @isValidEvent.apply @, arguments
-      method = @makeAlgorithmInterfaceName type
       if @strategy[method]?
         @strategy[method].call(@strategy, e)
         
@@ -27,27 +31,24 @@
       isType = @strategy.events[selector] is e.type
       isChild and isType
         
-    # http://stackoverflow.com/a/1026087
-    makeAlgorithmInterfaceName: (string) ->
-      'on' + string.charAt(0).toUpperCase() + string.slice(1)
-    
     setView: (@view) ->
       @bindEvents()
       
     bindEvents: () ->
-      events  = @strategy.events or {}
-      for selector, type of events
-        @bindEvent selector, type
-      return
+      events = @strategy.getEventIterator()
+      while not events.isDone()
+        {selector, eventName, method} = events.currentItem()
+        @bindEvent selector, eventName, method
+        events.next()
       
-    bindEvent: (selector, type) ->
+    bindEvent: (selector, type, method) ->
       element = @view.getElement()
-      element.addEventListener(type, @trigger.bind(@, selector, type), false)
+      element.addEventListener(type, @trigger.bind(@, selector, type, method), false)
       
     setModel: (model) ->
       @strategy.setModel model
       
     getModel: () ->
       @strategy.getModel()
-      
+
   ControllerContext
