@@ -16,6 +16,9 @@
     ControllerContext = (function() {
       function ControllerContext(strategy) {
         this.strategy = strategy;
+        if (this.strategy == null) {
+          throw new Error('ArgumentException');
+        }
       }
 
       ControllerContext.prototype.init = function() {
@@ -23,7 +26,7 @@
       };
 
       ControllerContext.prototype.trigger = function(selector, type, method, e) {
-        if (!this.isValidEvent.apply(this, arguments)) {
+        if (!this.isValidEvent(selector, method, e)) {
           return;
         }
         if (this.strategy[method] != null) {
@@ -31,13 +34,40 @@
         }
       };
 
-      ControllerContext.prototype.isValidEvent = function(selector, type, e) {
-        var element, isChild, isType, nodes;
+      ControllerContext.prototype.isValidEvent = function(selector, e, method) {
+        var hasElement, hasEvent;
+        hasEvent = this.eventExists(selector, e, method);
+        hasElement = this.elementExists(selector);
+        return hasEvent && hasElement;
+      };
+
+      ControllerContext.prototype.eventExists = function(selector, e, method) {
+        if (selector == null) {
+          throw new ReferenceError('selector');
+        }
+        if (e == null) {
+          throw new ReferenceError('e');
+        }
+        if (method == null) {
+          throw new ReferenceError('method');
+        }
+        return this.strategy.hasEvent(e.type, selector, method);
+      };
+
+      ControllerContext.prototype.elementExists = function(selector) {
+        var element, nodes;
+        if (this.view == null) {
+          throw new ReferenceError('@view');
+        }
+        if (selector == null) {
+          throw new ReferenceError('selector');
+        }
         element = this.view.getElement();
+        if (element == null) {
+          return false;
+        }
         nodes = element.parentNode.querySelectorAll(selector);
-        isChild = nodes.length > 0;
-        isType = this.strategy.events[selector] === e.type;
-        return isChild && isType;
+        return nodes.length > 0;
       };
 
       ControllerContext.prototype.setView = function(view) {

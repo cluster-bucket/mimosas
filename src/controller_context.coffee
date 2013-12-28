@@ -13,6 +13,7 @@
 
   class ControllerContext
     constructor: (@strategy) ->
+      throw new Error 'ArgumentException' unless @strategy?
 
     # Init is here to prevent inadvertently clobbering the constructor 
     # functionality by not using super in the extended class. 
@@ -20,16 +21,28 @@
       @strategy.init()
 
     trigger: (selector, type, method, e) ->
-      return unless @isValidEvent.apply @, arguments
+      return unless @isValidEvent selector, method, e
       if @strategy[method]?
         @strategy[method].call(@strategy, e)
+
+    isValidEvent: (selector, e, method) ->
+      hasEvent = @eventExists selector, e, method
+      hasElement = @elementExists selector
+      hasEvent and hasElement
         
-    isValidEvent: (selector, type, e) ->
+    eventExists: (selector, e, method) ->
+      throw new ReferenceError 'selector' unless selector?
+      throw new ReferenceError 'e' unless e?
+      throw new ReferenceError 'method' unless method?
+      @strategy.hasEvent e.type, selector, method
+      
+    elementExists: (selector) ->  
+      throw new ReferenceError '@view' unless @view?
+      throw new ReferenceError 'selector' unless selector?
       element = @view.getElement()
+      return false unless element?
       nodes = element.parentNode.querySelectorAll selector
-      isChild = nodes.length > 0
-      isType = @strategy.events[selector] is e.type
-      isChild and isType
+      nodes.length > 0
         
     setView: (@view) ->
       @bindEvents()
