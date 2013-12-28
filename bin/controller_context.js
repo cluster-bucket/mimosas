@@ -18,12 +18,14 @@
         this.strategy = strategy;
       }
 
-      ControllerContext.prototype.trigger = function(selector, type, e) {
-        var method;
+      ControllerContext.prototype.init = function() {
+        return this.strategy.init();
+      };
+
+      ControllerContext.prototype.trigger = function(selector, type, method, e) {
         if (!this.isValidEvent.apply(this, arguments)) {
           return;
         }
-        method = this.makeAlgorithmInterfaceName(type);
         if (this.strategy[method] != null) {
           return this.strategy[method].call(this.strategy, e);
         }
@@ -38,28 +40,27 @@
         return isChild && isType;
       };
 
-      ControllerContext.prototype.makeAlgorithmInterfaceName = function(string) {
-        return 'on' + string.charAt(0).toUpperCase() + string.slice(1);
-      };
-
       ControllerContext.prototype.setView = function(view) {
         this.view = view;
         return this.bindEvents();
       };
 
       ControllerContext.prototype.bindEvents = function() {
-        var events, selector, type;
-        events = this.strategy.events || {};
-        for (selector in events) {
-          type = events[selector];
-          this.bindEvent(selector, type);
+        var eventName, events, method, selector, _ref, _results;
+        events = this.strategy.getEventIterator();
+        _results = [];
+        while (!events.isDone()) {
+          _ref = events.currentItem(), selector = _ref.selector, eventName = _ref.eventName, method = _ref.method;
+          this.bindEvent(selector, eventName, method);
+          _results.push(events.next());
         }
+        return _results;
       };
 
-      ControllerContext.prototype.bindEvent = function(selector, type) {
+      ControllerContext.prototype.bindEvent = function(selector, type, method) {
         var element;
         element = this.view.getElement();
-        return element.addEventListener(type, this.trigger.bind(this, selector, type), false);
+        return element.addEventListener(type, this.trigger.bind(this, selector, type, method), false);
       };
 
       ControllerContext.prototype.setModel = function(model) {

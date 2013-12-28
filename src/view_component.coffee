@@ -30,6 +30,8 @@
         
       setController: (controller) ->
         @controller = new ControllerContex controller
+        # Init must be called before anything else
+        @controller.init()
         @controller.setView @
         @controller.setModel(@model) if @model?
         

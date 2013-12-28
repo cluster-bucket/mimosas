@@ -3,10 +3,10 @@ define ['mimosas/controller_strategy'], (ControllerStrategy) ->
   ENTER_KEY = 13
   
   class NewTodoController extends ControllerStrategy
-    events: 
-      '#new-todo': 'keypress'
+    init: () -> 
+      @addEvent 'keypress', '#new-todo', 'inputChanged'
       
-    onKeypress: (e) ->
+    inputChanged: (e) ->
       key = e.which or e.keyCode
       return unless key is ENTER_KEY
       @getModel().addTodo
