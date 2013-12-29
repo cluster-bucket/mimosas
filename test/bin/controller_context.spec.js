@@ -13,21 +13,6 @@
     }
   })(this, function(ControllerContext) {
     return describe('ControllerContext', function() {
-      /*   
-      controllerContext = undefined
-      
-      mockStrategy: () ->
-        strategy =
-          init: () ->
-      
-      beforeEach ->
-        strategy = mockStrategy()
-        controllerContext = new ControllerContext strategy
-      
-      afterEach ->
-        controllerContext = undefined
-      */
-
       it('should exist', function() {
         return expect(ControllerContext).to.exist;
       });
