@@ -1,4 +1,3 @@
-
 ((root, factory) ->
   if typeof define is 'function' and define.amd
     define ['../../bin/controller_context'], factory
@@ -14,30 +13,15 @@
 ) @, (ControllerContext) ->
 
   describe 'ControllerContext', ->
-    
-    ###   
-    controllerContext = undefined
-    
-    mockStrategy: () ->
-      strategy =
-        init: () ->
-    
-    beforeEach ->
-      strategy = mockStrategy()
-      controllerContext = new ControllerContext strategy
 
-    afterEach ->
-      controllerContext = undefined
-    ###
-    
     it 'should exist', ->
       expect(ControllerContext).to.exist
-  
+
     it 'should throw when a strategy is not passed into its constructor', ->
       throwMe = ->
         controllerContext = new ControllerContext()
       expect(throwMe).to.throw()
-      
+
     it 'should call init on the strategy', ->
       initCalled = false
       strategy =
@@ -46,7 +30,7 @@
       controllerContext = new ControllerContext strategy
       controllerContext.init()
       expect(initCalled).to.be.true
-      
+
     it 'should set a model on the strategy', ->
       passedModel = undefined
       strategy =
@@ -55,7 +39,7 @@
       controllerContext = new ControllerContext strategy
       controllerContext.setModel 'foo'
       expect(passedModel).to.equal 'foo'
-      
+
     it 'should get a model from the strategy', ->
       strategy =
         getModel: () ->
@@ -63,7 +47,7 @@
       controllerContext = new ControllerContext strategy
       model = controllerContext.getModel()
       expect(model).to.equal 'foo'
-      
+
     it 'should throw a ReferenceError if isValidEvent is called without a view', ->
       strategy =
         hasEvent: () ->
@@ -84,13 +68,13 @@
       throwMe = ->
         controllerContext.isValidEvent '#fixture', null, {}
       expect(throwMe).to.throw(ReferenceError)
-      
+
     it 'should throw a ReferenceError if isValidEvent is called without an event', ->
       controllerContext = new ControllerContext {}
       throwMe = ->
         controllerContext.isValidEvent '#fixture', 'onClick', null
       expect(throwMe).to.throw(ReferenceError)
-      
+
     it 'should return true if the event and element exist', ->
       strategy =
         hasEvent: () ->
@@ -98,12 +82,12 @@
       view =
         getElement: () ->
           document.getElementById 'fixture'
-          
+
       controllerContext = new ControllerContext strategy
       controllerContext.view = view
       result = controllerContext.isValidEvent '#fixture', {type: 'click'}, 'onClick'
       expect(result).to.be.true
-      
+
     it 'should return false if the event doesn\'t exist and the element does', ->
       strategy =
         hasEvent: () ->
@@ -111,7 +95,7 @@
       view =
         getElement: () ->
           document.getElementById 'fixture'
-          
+
       controllerContext = new ControllerContext strategy
       controllerContext.view = view
       result = controllerContext.isValidEvent '#fixture', {type: 'click'}, 'onClick'
@@ -124,7 +108,7 @@
       view =
         getElement: () ->
           document.getElementById 'xfixture'
-          
+
       controllerContext = new ControllerContext strategy
       controllerContext.view = view
       result = controllerContext.isValidEvent '#xfixture', {type: 'click'}, 'onClick'

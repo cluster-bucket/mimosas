@@ -11,16 +11,19 @@ startServer = () ->
   server
 
 task 'clean', 'clean the build directories', ->
+  console.log '- Cleaning the build and test directories'
   cmd = 'rm -rf ./bin/* && rm -rf ./test/bin/*'
   exec cmd, (err, stdout, stderr) ->
     if err then console.error stderr else console.log stdout
 
 task 'build:src', 'build the source', ->
+  console.log '- Building the source files'
   compiler = spawn 'coffee', ['-o', 'bin/', '-c', 'src/']
   compiler.stdout.on 'data', (data) -> console.log data.toString().trim()
   compiler.stderr.on 'data', (data) -> console.error data.toString().trim()
 
 task 'build:test', 'build tests', ->
+  console.log '- Building the test files'
   compiler = spawn 'coffee', ['-o', 'test/bin/', '-c', 'test/spec/']
   compiler.stdout.on 'data', (data) -> console.log data.toString().trim()
   compiler.stderr.on 'data', (data) -> console.error data.toString().trim()
@@ -38,16 +41,20 @@ task 'build', 'build test and source', ->
   invoke 'build:test'
 
 task 'test:amd', 'test browser AMD', ->
+  console.log '- Running the AMD tests'
   server = startServer()
-  cmd = './node_modules/.bin/mocha-phantomjs --reporter dot http://localhost:8000/test/SpecRunnerGlobals.html'
+  url = 'http://localhost:8000/test/SpecRunnerAMD.html'
+  cmd = "./node_modules/.bin/mocha-phantomjs --reporter dot #{url}"
   exec cmd, (err, stdout, stderr) ->
     console.log 'Browser AMD:'
     if err then console.error stderr else console.log stdout
     server.kill()
 
 task 'test:globals', 'test browser globals', ->
+  console.log '- Running the globals tests'
   server = startServer()
-  cmd = './node_modules/.bin/mocha-phantomjs --reporter dot http://localhost:8000/test/SpecRunnerGlobals.html'
+  url = 'http://localhost:8000/test/SpecRunnerGlobals.html'
+  cmd = "./node_modules/.bin/mocha-phantomjs --reporter dot #{url}"
   exec cmd, (err, stdout, stderr) ->
     console.log 'Browser globals:'
     if err then console.error stderr else console.log stdout
@@ -61,7 +68,6 @@ task 'test:server', 'test server side scripts', ->
 
 task 'test', 'test all the things', ->
   invoke 'build'
-  invoke 'test:server'
   invoke 'test:globals'
   invoke 'test:amd'
 
