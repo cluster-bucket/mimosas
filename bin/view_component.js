@@ -4,24 +4,24 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   (function(root, factory) {
-    var ControllerContex, ControllerStrategy, ViewObserver;
+    var ControllerContext, ControllerStrategy, ViewObserver;
     if (typeof define === 'function' && define.amd) {
       define(['./view_observer', './controller_context', './controller_strategy'], factory);
     } else if (typeof exports === 'object') {
       ViewObserver = require('./view_observer');
-      ControllerContex = require('./controller_context');
+      ControllerContext = require('./controller_context');
       ControllerStrategy = require('./controller_strategy');
-      module.exports = factory(ViewObserver, ControllerContex, ControllerStrategy);
+      module.exports = factory(ViewObserver, ControllerContext, ControllerStrategy);
     } else {
       if (root.Mimosas == null) {
         root.Mimosas = {};
       }
       ViewObserver = root.Mimosas.ViewObserver;
-      ControllerContex = root.Mimosas.ControllerContex;
+      ControllerContext = root.Mimosas.ControllerContext;
       ControllerStrategy = root.Mimosas.ControllerStrategy;
-      root.Mimosas.ViewComponent = factory(ViewObserver, ControllerContex, ControllerStrategy);
+      root.Mimosas.ViewComponent = factory(ViewObserver, ControllerContext, ControllerStrategy);
     }
-  })(this, function(ViewObserver, ControllerContex, ControllerStrategy) {
+  })(this, function(ViewObserver, ControllerContext, ControllerStrategy) {
     var ViewComponent;
     ViewComponent = (function(_super) {
       __extends(ViewComponent, _super);
@@ -29,7 +29,7 @@
       function ViewComponent(selector) {
         ViewComponent.__super__.constructor.apply(this, arguments);
         this.setElement(selector);
-        this.controller = new ControllerContex(new ControllerStrategy());
+        this.controller = new ControllerContext(new ControllerStrategy());
       }
 
       ViewComponent.prototype.setParent = function(parent) {
@@ -41,7 +41,7 @@
       };
 
       ViewComponent.prototype.setController = function(controller) {
-        this.controller = new ControllerContex(controller);
+        this.controller = new ControllerContext(controller);
         this.controller.init();
         this.controller.setView(this);
         if (this.model != null) {
