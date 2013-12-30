@@ -18,5 +18,5 @@
         val.__POINTER__ = key
         list.append val
       new Iterator list
-      
+
   Aggregate

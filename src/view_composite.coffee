@@ -14,20 +14,16 @@
     root.Mimosas.ViewComposite = factory(ViewComponent, List)
     return
 ) @, (ViewComponent, List) ->
-  
+
   class ViewComposite extends ViewComponent
     constructor: () ->
       super
       @list = new List()
-      
+
     add: (component) ->
-      component.setParent @
       @list.append component
-      
+
     remove: (pointer) ->
       @list.remove pointer
-      
-    getViewComposite: () ->
-      @
-      
+
   ViewComposite

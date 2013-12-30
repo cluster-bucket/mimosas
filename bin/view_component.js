@@ -28,59 +28,84 @@
 
       function ViewComponent(selector) {
         ViewComponent.__super__.constructor.apply(this, arguments);
-        this.setElement(selector);
+        if (!selector) {
+          throw new ReferenceError('selector');
+        }
+        this.element = this.getElementFromSelector(selector);
+        if (!this.element) {
+          throw new ReferenceError('@element');
+        }
         this.controller = new ControllerContext(new ControllerStrategy());
       }
 
-      ViewComponent.prototype.setParent = function(parent) {
-        this.parent = parent;
+      ViewComponent.prototype.getElementFromSelector = function(selector) {
+        var nodes, scope;
+        scope = this.element || document;
+        nodes = scope.querySelectorAll(selector);
+        if (nodes.length > 0) {
+          return nodes[0];
+        }
       };
 
-      ViewComponent.prototype.getParent = function() {
-        return this.parent;
+      ViewComponent.prototype.setModel = function(model) {
+        this.model = model;
+        this.model.attach(this);
+        return this.controller.setModel(this.model);
       };
 
       ViewComponent.prototype.setController = function(controller) {
         this.controller = new ControllerContext(controller);
-        this.controller.registerEvents();
         this.controller.setView(this);
         if (this.model != null) {
           return this.controller.setModel(this.model);
         }
       };
 
-      ViewComponent.prototype.getController = function() {
-        return this.controller;
+      ViewComponent.prototype.addEvent = function(type, selector, method) {
+        var handler;
+        handler = this.triggerEvent.bind(this, method, selector);
+        return this.element.addEventListener(type, handler, false);
       };
 
-      ViewComponent.prototype.setModel = function(model) {
-        this.model = model;
-        this.model.attach(this);
-        if (this.controller != null) {
-          return this.controller.setModel(this.model);
+      ViewComponent.prototype.triggerEvent = function(method, selector, e) {
+        if (!this.elementMatchesSelector(e.target, selector)) {
+          return;
         }
+        return this.controller.trigger(method, e);
       };
 
-      ViewComponent.prototype.setElement = function(selector) {
-        if (selector.charAt(0) === '#') {
-          return this.element = document.getElementById(selector.slice(1));
-        } else {
-          return this.element = document.querySelectorAll(selector);
+      ViewComponent.prototype.closest = function(element, selector) {
+        var parent;
+        if (element === this.element) {
+          return;
         }
+        if (this.elementMatchesSelector(element, selector)) {
+          return element;
+        }
+        parent = element.parentNode;
+        return this.closest(parent, selector);
+      };
+
+      ViewComponent.prototype.elementMatchesSelector = function(element, selector) {
+        var matches, name, prefix, _i, _len, _ref;
+        matches = false;
+        _ref = ['webkit', 'moz', 'ms'];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          prefix = _ref[_i];
+          name = "" + prefix + "MatchesSelector";
+          if (!element[name]) {
+            continue;
+          }
+          matches = element[name](selector);
+        }
+        return matches;
       };
 
       ViewComponent.prototype.getElement = function() {
         return this.element;
       };
 
-      ViewComponent.prototype.selectorIsDescendant = function(selector) {
-        var nodes;
-        if (selector == null) {
-          throw new ReferenceError('selector');
-        }
-        nodes = this.element.parentNode.querySelectorAll(selector);
-        return nodes.length > 0;
-      };
+      ViewComponent.prototype.display = function() {};
 
       return ViewComponent;
 

@@ -21,82 +21,10 @@
         }
       }
 
-      ControllerContext.prototype.registerEvents = function() {
-        return this.strategy.registerEvents();
-      };
-
-      ControllerContext.prototype.trigger = function(selector, type, method, e) {
-        if (!this.isValidEvent(selector, e, method)) {
-          return;
+      ControllerContext.prototype.trigger = function(method, e) {
+        if (this.strategy[method] != null) {
+          return this.strategy[method].call(this.strategy, e);
         }
-        return this.strategy[method].call(this.strategy, e);
-      };
-
-      ControllerContext.prototype.isValidEvent = function(selector, e, method) {
-        var hasElement, hasEvent, hasMethod;
-        hasEvent = this.eventExists(selector, e, method);
-        hasElement = this.elementExists(e.target, selector);
-        hasMethod = this.methodExists(method);
-        return hasEvent && hasElement && hasMethod;
-      };
-
-      ControllerContext.prototype.eventExists = function(selector, e, method) {
-        if (selector == null) {
-          throw new ReferenceError('selector');
-        }
-        if (e == null) {
-          throw new ReferenceError('e');
-        }
-        if (method == null) {
-          throw new ReferenceError('method');
-        }
-        return this.strategy.hasEvent(e.type, selector, method);
-      };
-
-      ControllerContext.prototype.elementExists = function(element, selector) {
-        var matches, name, prefix, _i, _len, _ref;
-        if (this.view == null) {
-          throw new ReferenceError('@view');
-        }
-        matches = false;
-        _ref = ['webkit', 'moz', 'ms'];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          prefix = _ref[_i];
-          name = "" + prefix + "MatchesSelector";
-          if (!element[name]) {
-            continue;
-          }
-          matches = element[name](selector);
-        }
-        return matches;
-      };
-
-      ControllerContext.prototype.methodExists = function(method) {
-        return this.strategy[method] != null;
-      };
-
-      ControllerContext.prototype.setView = function(view) {
-        this.view = view;
-        this.strategy.setView(this.view);
-        return this.bindEvents();
-      };
-
-      ControllerContext.prototype.bindEvents = function() {
-        var eventName, events, method, selector, _ref, _results;
-        events = this.strategy.getEventIterator();
-        _results = [];
-        while (!events.isDone()) {
-          _ref = events.currentItem(), selector = _ref.selector, eventName = _ref.eventName, method = _ref.method;
-          this.bindEvent(selector, eventName, method);
-          _results.push(events.next());
-        }
-        return _results;
-      };
-
-      ControllerContext.prototype.bindEvent = function(selector, type, method) {
-        var element;
-        element = this.view.getElement();
-        return element.addEventListener(type, this.trigger.bind(this, selector, type, method), false);
       };
 
       ControllerContext.prototype.setModel = function(model) {
@@ -105,6 +33,11 @@
 
       ControllerContext.prototype.getModel = function() {
         return this.strategy.getModel();
+      };
+
+      ControllerContext.prototype.setView = function(view) {
+        this.view = view;
+        return this.strategy.setView(this.view);
       };
 
       return ControllerContext;

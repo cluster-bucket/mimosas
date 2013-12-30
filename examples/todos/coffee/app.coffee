@@ -1,30 +1,34 @@
 define [
-  'cs!collections/todos'
-  'cs!views/page'
+  'cs!models/todos'
+  'cs!views/top'
   'cs!views/new'
   'cs!views/list'
+  'cs!views/toggle'
   'cs!controllers/new'
   'cs!controllers/list'
-], (Todos, PageView, NewTodoView, ListTodosView, NewTodoController, ListTodosController) ->
+  'cs!controllers/toggle'
+], (Todos, TopView, NewTodoView, ListTodosView, ToggleTodosView,
+  NewTodoController, ListTodosController, ToggleTodosController) ->
 
   todos = new Todos()
 
-  newTodoCtrl = new NewTodoController()
-  newTodoCtrl.addEvent 'keypress', '#new-todo', 'inputChanged'
-
   newTodoView = new NewTodoView '#new-todo'
-  newTodoView.setController newTodoCtrl
   newTodoView.setModel todos
+  newTodoView.setController new NewTodoController()
+  newTodoView.addEvent 'keypress', '#new-todo', 'inputChanged'
 
-  listTodosCtrl = new ListTodosController()
-  listTodosCtrl.addEvent 'click', '.destroy', 'destroyClicked'
-  listTodosCtrl.addEvent 'click', '.toggle', 'toggleClicked'
+  toggleTodosView = new ToggleTodosView '#toggle-all'
+  toggleTodosView.setModel todos
+  toggleTodosView.setController new ToggleTodosController()
+  toggleTodosView.addEvent 'click', '#toggle-all', 'toggleAllClicked'
 
   listTodosView = new ListTodosView '#todo-list'
-  listTodosView.setController listTodosCtrl
   listTodosView.setModel todos
+  listTodosView.setController new ListTodosController()
+  listTodosView.addEvent 'click', '.destroy', 'destroyClicked'
+  listTodosView.addEvent 'click', '.toggle', 'toggleClicked'
 
-  pageView = new PageView '#todoapp'
-  pageView.add newTodoView
-  pageView.add listTodosView
-  pageView.display()
+  topView = new TopView '#todoapp'
+  topView.add newTodoView
+  topView.add listTodosView
+  topView.display()

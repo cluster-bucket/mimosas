@@ -19,44 +19,7 @@
   })(this, function(List, Iterator) {
     var ControllerStrategy;
     ControllerStrategy = (function() {
-      function ControllerStrategy() {
-        this.events = new List();
-      }
-
-      ControllerStrategy.prototype.registerEvents = function() {};
-
-      ControllerStrategy.prototype.addEvent = function(eventName, selector, method) {
-        var item, __POINTER__;
-        __POINTER__ = this.getPointerFromArgs.apply(this, arguments);
-        item = {
-          __POINTER__: __POINTER__,
-          selector: selector,
-          eventName: eventName,
-          method: method
-        };
-        return this.events.append(item);
-      };
-
-      ControllerStrategy.prototype.removeEvent = function(eventName, selector, method) {
-        var __POINTER__;
-        __POINTER__ = this.getPointerFromArgs.apply(this, arguments);
-        return this.events.remove(__POINTER__);
-      };
-
-      ControllerStrategy.prototype.getEventIterator = function() {
-        return new Iterator(this.events);
-      };
-
-      ControllerStrategy.prototype.hasEvent = function(eventName, selector, method) {
-        var item, __POINTER__;
-        __POINTER__ = this.getPointerFromArgs.apply(this, arguments);
-        item = this.events.get(__POINTER__);
-        return item != null;
-      };
-
-      ControllerStrategy.prototype.getPointerFromArgs = function() {
-        return [].slice.call(arguments, 0).join('/');
-      };
+      function ControllerStrategy() {}
 
       ControllerStrategy.prototype.setModel = function(model) {
         this.model = model;

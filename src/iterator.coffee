@@ -10,7 +10,7 @@
     root.Mimosas.Iterator = factory()
     return
 ) @, () ->
-  
+
   class Iterator
     constructor: (@list) ->
       @current = 0
@@ -25,5 +25,5 @@
     currentItem: () ->
       throw new Error "IteratorOutOfBounds" if @isDone()
       @list.getByIndex @current
-      
+
   Iterator

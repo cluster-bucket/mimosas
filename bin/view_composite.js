@@ -30,16 +30,11 @@
       }
 
       ViewComposite.prototype.add = function(component) {
-        component.setParent(this);
         return this.list.append(component);
       };
 
       ViewComposite.prototype.remove = function(pointer) {
         return this.list.remove(pointer);
-      };
-
-      ViewComposite.prototype.getViewComposite = function() {
-        return this;
       };
 
       return ViewComposite;

@@ -12,11 +12,11 @@
     root.Mimosas.ViewObserver = factory(Guid)
     return
 ) @, (Guid) ->
-  
+
   class ViewObserver
     constructor: () ->
       @__POINTER__ = Guid.generate()
 
     changed: (theChangedSubject) ->
-      
+
   ViewObserver
