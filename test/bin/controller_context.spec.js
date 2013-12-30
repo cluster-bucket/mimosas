@@ -24,17 +24,17 @@
         };
         return expect(throwMe).to["throw"]();
       });
-      it('should call init on the strategy', function() {
-        var controllerContext, initCalled, strategy;
-        initCalled = false;
+      it('should call registerEvents on the strategy', function() {
+        var controllerContext, registerEventsCalled, strategy;
+        registerEventsCalled = false;
         strategy = {
-          init: function() {
-            return initCalled = true;
+          registerEvents: function() {
+            return registerEventsCalled = true;
           }
         };
         controllerContext = new ControllerContext(strategy);
-        controllerContext.init();
-        return expect(initCalled).to.be["true"];
+        controllerContext.registerEvents();
+        return expect(registerEventsCalled).to.be["true"];
       });
       it('should set a model on the strategy', function() {
         var controllerContext, passedModel, strategy;

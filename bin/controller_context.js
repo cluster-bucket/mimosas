@@ -21,24 +21,23 @@
         }
       }
 
-      ControllerContext.prototype.init = function() {
-        return this.strategy.init();
+      ControllerContext.prototype.registerEvents = function() {
+        return this.strategy.registerEvents();
       };
 
       ControllerContext.prototype.trigger = function(selector, type, method, e) {
-        if (!this.isValidEvent(selector, method, e)) {
+        if (!this.isValidEvent(selector, e, method)) {
           return;
         }
-        if (this.strategy[method] != null) {
-          return this.strategy[method].call(this.strategy, e);
-        }
+        return this.strategy[method].call(this.strategy, e);
       };
 
       ControllerContext.prototype.isValidEvent = function(selector, e, method) {
-        var hasElement, hasEvent;
+        var hasElement, hasEvent, hasMethod;
         hasEvent = this.eventExists(selector, e, method);
-        hasElement = this.elementExists(selector);
-        return hasEvent && hasElement;
+        hasElement = this.elementExists(e.target, selector);
+        hasMethod = this.methodExists(method);
+        return hasEvent && hasElement && hasMethod;
       };
 
       ControllerContext.prototype.eventExists = function(selector, e, method) {
@@ -54,24 +53,31 @@
         return this.strategy.hasEvent(e.type, selector, method);
       };
 
-      ControllerContext.prototype.elementExists = function(selector) {
-        var element, nodes;
+      ControllerContext.prototype.elementExists = function(element, selector) {
+        var matches, name, prefix, _i, _len, _ref;
         if (this.view == null) {
           throw new ReferenceError('@view');
         }
-        if (selector == null) {
-          throw new ReferenceError('selector');
+        matches = false;
+        _ref = ['webkit', 'moz', 'ms'];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          prefix = _ref[_i];
+          name = "" + prefix + "MatchesSelector";
+          if (!element[name]) {
+            continue;
+          }
+          matches = element[name](selector);
         }
-        element = this.view.getElement();
-        if (element == null) {
-          return false;
-        }
-        nodes = element.parentNode.querySelectorAll(selector);
-        return nodes.length > 0;
+        return matches;
+      };
+
+      ControllerContext.prototype.methodExists = function(method) {
+        return this.strategy[method] != null;
       };
 
       ControllerContext.prototype.setView = function(view) {
         this.view = view;
+        this.strategy.setView(this.view);
         return this.bindEvents();
       };
 

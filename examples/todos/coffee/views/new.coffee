@@ -2,6 +2,9 @@
 # and it will always be visible.
 define ['mimosas/view_leaf'], (ViewLeaf) ->
   class NewTodoView extends ViewLeaf
-  
+
     # An error will be thrown from the page view if this is not present
     display: () ->
+
+    clear: () ->
+      @getElement().value = ''

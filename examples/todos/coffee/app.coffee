@@ -9,16 +9,22 @@ define [
 
   todos = new Todos()
 
-  pageView = new PageView '#todoapp'
-  
+  newTodoCtrl = new NewTodoController()
+  newTodoCtrl.addEvent 'keypress', '#new-todo', 'inputChanged'
+
   newTodoView = new NewTodoView '#new-todo'
-  newTodoView.setController new NewTodoController()
+  newTodoView.setController newTodoCtrl
   newTodoView.setModel todos
-  
+
+  listTodosCtrl = new ListTodosController()
+  listTodosCtrl.addEvent 'click', '.destroy', 'destroyClicked'
+  listTodosCtrl.addEvent 'click', '.toggle', 'toggleClicked'
+
   listTodosView = new ListTodosView '#todo-list'
-  listTodosView.setController new ListTodosController()
+  listTodosView.setController listTodosCtrl
   listTodosView.setModel todos
 
+  pageView = new PageView '#todoapp'
   pageView.add newTodoView
   pageView.add listTodosView
   pageView.display()

@@ -18,32 +18,35 @@
   class ControllerStrategy
     constructor: () ->
       @events = new List()
-    
-    # Init is here to prevent inadvertently clobbering the constructor 
-    # functionality by not using super in the extended class. 
-    init: () ->
-      
+
+    # Events need to be registered and the constructor is the ideal place,
+    # but it's too easy to clobber the contructor by forgetting to call super.
+    # registerEvents provides a safe place to call addEvent.
+    registerEvents: () ->
+
     addEvent: (eventName, selector, method) ->
-      __POINTER__ = @getPointerFromArgs arguments
+      __POINTER__ = @getPointerFromArgs.apply @, arguments
       item = {__POINTER__, selector, eventName, method}
       @events.append item
-      
+
     removeEvent: (eventName, selector, method) ->
-      __POINTER__ = @getPointerFromArgs arguments
+      __POINTER__ = @getPointerFromArgs.apply @, arguments
       @events.remove __POINTER__
 
     getEventIterator: () ->
       new Iterator @events
-      
+
     hasEvent: (eventName, selector, method) ->
-      __POINTER__ = @getPointerFromArgs arguments
+      __POINTER__ = @getPointerFromArgs.apply @, arguments
       item = @events.get __POINTER__
       item?
-      
+
     getPointerFromArgs: () ->
       return [].slice.call(arguments, 0).join('/')
-      
+
     setModel: (@model) ->
     getModel: () -> @model
+    setView: (@view) ->
+    getView: () -> @view
 
   ControllerStrategy

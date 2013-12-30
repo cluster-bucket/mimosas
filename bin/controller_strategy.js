@@ -23,11 +23,11 @@
         this.events = new List();
       }
 
-      ControllerStrategy.prototype.init = function() {};
+      ControllerStrategy.prototype.registerEvents = function() {};
 
       ControllerStrategy.prototype.addEvent = function(eventName, selector, method) {
         var item, __POINTER__;
-        __POINTER__ = this.getPointerFromArgs(arguments);
+        __POINTER__ = this.getPointerFromArgs.apply(this, arguments);
         item = {
           __POINTER__: __POINTER__,
           selector: selector,
@@ -39,7 +39,7 @@
 
       ControllerStrategy.prototype.removeEvent = function(eventName, selector, method) {
         var __POINTER__;
-        __POINTER__ = this.getPointerFromArgs(arguments);
+        __POINTER__ = this.getPointerFromArgs.apply(this, arguments);
         return this.events.remove(__POINTER__);
       };
 
@@ -49,7 +49,7 @@
 
       ControllerStrategy.prototype.hasEvent = function(eventName, selector, method) {
         var item, __POINTER__;
-        __POINTER__ = this.getPointerFromArgs(arguments);
+        __POINTER__ = this.getPointerFromArgs.apply(this, arguments);
         item = this.events.get(__POINTER__);
         return item != null;
       };
@@ -64,6 +64,14 @@
 
       ControllerStrategy.prototype.getModel = function() {
         return this.model;
+      };
+
+      ControllerStrategy.prototype.setView = function(view) {
+        this.view = view;
+      };
+
+      ControllerStrategy.prototype.getView = function() {
+        return this.view;
       };
 
       return ControllerStrategy;
