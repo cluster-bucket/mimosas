@@ -1,14 +1,16 @@
-define ['mimosas/controller_strategy'], (ControllerStrategy) ->
+define [
+  'mimosas/controller_strategy'
+  'cs!../models/todo'
+], (ControllerStrategy, Todo) ->
 
   ENTER_KEY = 13
-  
+
   class NewTodoController extends ControllerStrategy
-    init: () -> 
-      @addEvent 'keypress', '#new-todo', 'inputChanged'
-      
     inputChanged: (e) ->
       key = e.which or e.keyCode
       return unless key is ENTER_KEY
-      @getModel().addTodo
+      todo = new Todo
         title: e.target.value
         completed: false
+      @getModel().append todo
+      @getView().clear()

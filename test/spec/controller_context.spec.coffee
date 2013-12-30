@@ -22,14 +22,14 @@
         controllerContext = new ControllerContext()
       expect(throwMe).to.throw()
 
-    it 'should call init on the strategy', ->
-      initCalled = false
+    it 'should call registerEvents on the strategy', ->
+      registerEventsCalled = false
       strategy =
-        init: () ->
-          initCalled = true
+        registerEvents: () ->
+          registerEventsCalled = true
       controllerContext = new ControllerContext strategy
-      controllerContext.init()
-      expect(initCalled).to.be.true
+      controllerContext.registerEvents()
+      expect(registerEventsCalled).to.be.true
 
     it 'should set a model on the strategy', ->
       passedModel = undefined

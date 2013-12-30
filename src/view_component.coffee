@@ -30,8 +30,8 @@
 
       setController: (controller) ->
         @controller = new ControllerContext controller
-        # Init must be called before anything else
-        @controller.init()
+        # registerEvents must be called before anything else
+        @controller.registerEvents()
         @controller.setView @
         @controller.setModel(@model) if @model?
 
@@ -50,5 +50,10 @@
 
       getElement: () ->
         @element
+
+      selectorIsDescendant: (selector) ->
+        throw new ReferenceError 'selector' unless selector?
+        nodes = @element.parentNode.querySelectorAll selector
+        nodes.length > 0
 
     ViewComponent

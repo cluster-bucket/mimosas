@@ -42,7 +42,7 @@
 
       ViewComponent.prototype.setController = function(controller) {
         this.controller = new ControllerContext(controller);
-        this.controller.init();
+        this.controller.registerEvents();
         this.controller.setView(this);
         if (this.model != null) {
           return this.controller.setModel(this.model);
@@ -71,6 +71,15 @@
 
       ViewComponent.prototype.getElement = function() {
         return this.element;
+      };
+
+      ViewComponent.prototype.selectorIsDescendant = function(selector) {
+        var nodes;
+        if (selector == null) {
+          throw new ReferenceError('selector');
+        }
+        nodes = this.element.parentNode.querySelectorAll(selector);
+        return nodes.length > 0;
       };
 
       return ViewComponent;

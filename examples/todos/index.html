@@ -49,7 +49,7 @@
 
     <script id="list-todos-template" type="text/x-handlebars-template">
       {{#each todos}}
-			<li id="{{id}}" class="{{#if completed}}completed{{/if}}">
+			<li data-id="{{id}}" class="todo{{#if completed}} completed{{/if}}">
 				<div class="view">
 					<input class="toggle" type="checkbox"{{#if completed}} checked{{/if}}>
 					<label>{{title}}</label>
