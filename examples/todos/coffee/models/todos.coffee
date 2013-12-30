@@ -2,7 +2,7 @@ define [
   'mimosas/model_subject'
   'mimosas/list'
   'mimosas/iterator'
-  'cs!../models/todo'
+  'cs!./todo'
 ], (ModelSubject, List, Iterator, Todo) ->
 
   class TodoList extends ModelSubject
@@ -14,6 +14,13 @@ define [
     setCompleted: (pointer, completed) ->
       item = @get pointer
       item.setCompleted completed
+      @notify()
+
+    setAllCompleted: (completed) ->
+      i = @getIterator()
+      while not i.isDone()
+        i.currentItem().setCompleted completed
+        i.next()
       @notify()
 
     append: (item) ->
@@ -38,24 +45,3 @@ define [
         serialized.push item.serialize()
         i.next()
       serialized
-
-  ###
-  class Todos extends ModelSubject
-    constructor: () ->
-      @collection = []
-      super
-
-    addTodo: (data) ->
-      if data?
-        @collection.push new Todo data
-        @notify()
-
-    getTodos: () ->
-      @collection
-
-    serialize: () ->
-      todos = []
-      for todo in @collection
-        todos.push todo.serialize()
-      todos
-  ###

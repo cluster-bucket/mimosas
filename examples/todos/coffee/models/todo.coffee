@@ -1,5 +1,5 @@
 define ['mimosas/model_subject', 'mimosas/guid'], (ModelSubject, Guid) ->
-  
+
   class Todo extends ModelSubject
     constructor: (data) ->
       super
@@ -7,19 +7,19 @@ define ['mimosas/model_subject', 'mimosas/guid'], (ModelSubject, Guid) ->
       if data.title?
         @setTitle data.title
         @setCompleted data.completed or false
-    
+
     getPointer: () ->
       @__POINTER__
-    
+
     getTitle: () ->
       @title
-    
+
     setTitle: (@title) ->
       @notify()
-    
+
     getCompleted: () ->
       @completed
-    
+
     setCompleted: (@completed) ->
       @notify()
 

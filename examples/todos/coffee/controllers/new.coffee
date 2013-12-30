@@ -6,6 +6,7 @@ define [
   ENTER_KEY = 13
 
   class NewTodoController extends ControllerStrategy
+
     inputChanged: (e) ->
       key = e.which or e.keyCode
       return unless key is ENTER_KEY

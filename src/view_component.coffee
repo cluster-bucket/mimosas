@@ -20,40 +20,53 @@
     class ViewComponent extends ViewObserver
       constructor: (selector) ->
         super
-        @setElement selector
+        throw new ReferenceError 'selector' unless selector
+        @element = @getElementFromSelector selector
+        throw new ReferenceError '@element' unless @element
         @controller = new ControllerContext new ControllerStrategy()
 
-      setParent: (@parent) ->
-
-      getParent: () ->
-        @parent
-
-      setController: (controller) ->
-        @controller = new ControllerContext controller
-        # registerEvents must be called before anything else
-        @controller.registerEvents()
-        @controller.setView @
-        @controller.setModel(@model) if @model?
-
-      getController: () ->
-        @controller
+      # Opt for simplicity over efficiency and compatibility
+      getElementFromSelector: (selector) ->
+        # After the element is set all calls will be scoped to it
+        scope = @element or document
+        nodes = scope.querySelectorAll selector
+        return nodes[0] if nodes.length > 0
+        return
 
       setModel: (@model) ->
         @model.attach @
-        @controller.setModel(@model) if @controller?
+        @controller.setModel @model
 
-      setElement: (selector) ->
-        if selector.charAt(0) is '#'
-          @element = document.getElementById selector.slice 1
-        else
-          @element = document.querySelectorAll selector
+      setController: (controller) ->
+        @controller = new ControllerContext controller
+        @controller.setView @
+        @controller.setModel(@model) if @model?
+
+      addEvent: (type, selector, method) ->
+        handler = @triggerEvent.bind @, method, selector
+        @element.addEventListener type, handler, false
+
+      triggerEvent: (method, selector, e) ->
+        return unless @elementMatchesSelector e.target, selector
+        @controller.trigger method, e
+
+      closest: (element, selector) ->
+        return if element is @element
+        return element if @elementMatchesSelector element, selector
+        parent = element.parentNode
+        @closest parent, selector
+
+      elementMatchesSelector: (element, selector) ->
+        matches = false
+        for prefix in ['webkit', 'moz', 'ms']
+          name = "#{prefix}MatchesSelector"
+          continue unless element[name]
+          matches = element[name] selector
+        matches
 
       getElement: () ->
         @element
 
-      selectorIsDescendant: (selector) ->
-        throw new ReferenceError 'selector' unless selector?
-        nodes = @element.parentNode.querySelectorAll selector
-        nodes.length > 0
+      display: () ->
 
     ViewComponent

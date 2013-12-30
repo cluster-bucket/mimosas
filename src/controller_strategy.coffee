@@ -17,33 +17,6 @@
 
   class ControllerStrategy
     constructor: () ->
-      @events = new List()
-
-    # Events need to be registered and the constructor is the ideal place,
-    # but it's too easy to clobber the contructor by forgetting to call super.
-    # registerEvents provides a safe place to call addEvent.
-    registerEvents: () ->
-
-    addEvent: (eventName, selector, method) ->
-      __POINTER__ = @getPointerFromArgs.apply @, arguments
-      item = {__POINTER__, selector, eventName, method}
-      @events.append item
-
-    removeEvent: (eventName, selector, method) ->
-      __POINTER__ = @getPointerFromArgs.apply @, arguments
-      @events.remove __POINTER__
-
-    getEventIterator: () ->
-      new Iterator @events
-
-    hasEvent: (eventName, selector, method) ->
-      __POINTER__ = @getPointerFromArgs.apply @, arguments
-      item = @events.get __POINTER__
-      item?
-
-    getPointerFromArgs: () ->
-      return [].slice.call(arguments, 0).join('/')
-
     setModel: (@model) ->
     getModel: () -> @model
     setView: (@view) ->

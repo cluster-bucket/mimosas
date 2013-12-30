@@ -14,5 +14,5 @@
 ) @, (ViewComponent) ->
 
   class ViewLeaf extends ViewComponent
-  
+
   ViewLeaf
