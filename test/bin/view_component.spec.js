@@ -26,13 +26,158 @@
       it('should exist', function() {
         return expect(ViewComponent).to.exist;
       });
-      it('should set a parent', function() {
-        component.setParent('foo');
-        return expect(component.parent).to.equal('foo');
+      it('should throw if a selector is not passed to the constructor', function() {
+        var throwMe;
+        throwMe = function() {
+          return new ViewComponent();
+        };
+        return expect(throwMe).to["throw"]();
       });
-      return it('should get a parent', function() {
-        component.setParent('bar');
-        return expect(component.getParent()).to.equal('bar');
+      it('should throw if selector doesn\'t resolve to an element', function() {
+        var throwMe;
+        throwMe = function() {
+          return new ViewComponent('#foo');
+        };
+        return expect(throwMe).to["throw"]();
+      });
+      it('should create an element instance variable when instantiated with a valid selector', function() {
+        return expect(component.element).to.exist;
+      });
+      it('should create the default controller when instantiated', function() {
+        return expect(component.controller).to.exist;
+      });
+      it('should get an element from a selector, scoped to the instances current element', function() {
+        var element;
+        component = new ViewComponent('body');
+        element = component.getElementFromSelector('#fixture');
+        return expect(element).to.exist;
+      });
+      it('should not get an element from a selector if it is out of scope', function() {
+        var element;
+        element = component.getElementFromSelector('body');
+        return expect(element).not.to.exist;
+      });
+      it('should set a model', function() {
+        var model;
+        expect(component.model).not.to.exist;
+        model = {
+          attach: function() {},
+          foo: 'bar'
+        };
+        component.setModel(model);
+        expect(component.model).to.exist;
+        return expect(component.model.foo).to.exist;
+      });
+      it('should call attach on the model when it is set', function() {
+        var model, modelAttached;
+        modelAttached = false;
+        model = {
+          attach: function() {
+            return modelAttached = true;
+          }
+        };
+        component.setModel(model);
+        return expect(modelAttached).to.be["true"];
+      });
+      it('should set the model on the controller when the model is set', function() {
+        var model, modelSet;
+        modelSet = false;
+        model = {
+          attach: function() {}
+        };
+        component.controller = {
+          setModel: function() {
+            return modelSet = true;
+          }
+        };
+        component.setModel(model);
+        return expect(modelSet).to.be["true"];
+      });
+      it('should set a non-default controller', function() {
+        var controller;
+        controller = {
+          setView: function() {},
+          foo: 'bar'
+        };
+        component.setController(controller);
+        expect(component.controller.strategy).to.exist;
+        return expect(component.controller.strategy.foo).to.exist;
+      });
+      it('should set the view on the controller when it is set', function() {
+        var controller, viewSet;
+        viewSet = false;
+        controller = {
+          setView: function() {
+            return viewSet = true;
+          }
+        };
+        component.setController(controller);
+        return expect(viewSet).to.be["true"];
+      });
+      it('should set the model on the controller when it is set', function() {
+        var controller, model, modelSet;
+        modelSet = false;
+        model = {
+          attach: function() {}
+        };
+        controller = {
+          setView: function() {},
+          setModel: function() {
+            return modelSet = true;
+          }
+        };
+        component.setModel(model);
+        component.setController(controller);
+        return expect(modelSet).to.be["true"];
+      });
+      it('should add an event and call triggerEvent when it is dispatched', function() {
+        var controller, eventTriggered;
+        eventTriggered = false;
+        controller = {
+          setView: function() {},
+          setModel: function() {}
+        };
+        component.triggerEvent = function() {
+          return eventTriggered = true;
+        };
+        component.addEvent('click', '#fixture', 'foo');
+        component.element.click();
+        return expect(eventTriggered).to.be["true"];
+      });
+      it('should call a method on the controller', function() {
+        var controller, fooCalled;
+        fooCalled = false;
+        controller = {
+          setView: function() {},
+          setModel: function() {},
+          foo: function() {
+            return fooCalled = true;
+          }
+        };
+        component.setController(controller);
+        component.addEvent('click', '#fixture', 'foo');
+        component.element.click();
+        return expect(fooCalled).to.be["true"];
+      });
+      it('should return true when an element matches a selector', function() {
+        var element, result, selector;
+        element = component.element;
+        selector = '#fixture';
+        result = component.elementMatchesSelector(element, selector);
+        return expect(result).to.be["true"];
+      });
+      it('should return false when an element doesn\'t match a selector', function() {
+        var element, result, selector;
+        element = component.element;
+        selector = '#xfixture';
+        result = component.elementMatchesSelector(element, selector);
+        return expect(result).to.be["false"];
+      });
+      return it('should get the closest element to a given element, with a given selector', function() {
+        var child, result;
+        child = document.getElementById('fixture-child');
+        result = component.closest(child, '#fixture');
+        return expect(result.id).to.equal('fixture');
       });
     });
   });

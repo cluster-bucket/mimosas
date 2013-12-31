@@ -17,29 +17,14 @@
 ) @, (ViewLeaf, ViewComponent, ViewObserver) ->
 
   describe 'ViewLeaf', ->
-    
+
     leaf = undefined
-    
+
     beforeEach ->
       leaf = new ViewLeaf('#fixture')
-      
+
     afterEach ->
       leaf = undefined
 
     it 'should exist', ->
       expect(ViewLeaf).to.exist
-
-    # BUG: doesn't work with AMD
-    #it 'should be an instance of ViewComponent', ->
-      #expect(leaf).to.be.an.instanceof ViewComponent
-
-    #it 'should be an instance of ViewObserver', ->
-      #expect(leaf).to.be.an.instanceof ViewObserver
-  
-    it 'should set a parent', ->
-      leaf.setParent 'foo'
-      expect(leaf.parent).to.equal 'foo'
-      
-    it 'should get a parent', ->
-      leaf.setParent 'bar'
-      expect(leaf.getParent()).to.equal 'bar'

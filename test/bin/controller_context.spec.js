@@ -24,18 +24,6 @@
         };
         return expect(throwMe).to["throw"]();
       });
-      it('should call registerEvents on the strategy', function() {
-        var controllerContext, registerEventsCalled, strategy;
-        registerEventsCalled = false;
-        strategy = {
-          registerEvents: function() {
-            return registerEventsCalled = true;
-          }
-        };
-        controllerContext = new ControllerContext(strategy);
-        controllerContext.registerEvents();
-        return expect(registerEventsCalled).to.be["true"];
-      });
       it('should set a model on the strategy', function() {
         var controllerContext, passedModel, strategy;
         passedModel = void 0;
@@ -48,7 +36,7 @@
         controllerContext.setModel('foo');
         return expect(passedModel).to.equal('foo');
       });
-      it('should get a model from the strategy', function() {
+      return it('should get a model from the strategy', function() {
         var controllerContext, model, strategy;
         strategy = {
           getModel: function() {
@@ -58,100 +46,6 @@
         controllerContext = new ControllerContext(strategy);
         model = controllerContext.getModel();
         return expect(model).to.equal('foo');
-      });
-      it('should throw a ReferenceError if isValidEvent is called without a view', function() {
-        var controllerContext, strategy, throwMe;
-        strategy = {
-          hasEvent: function() {
-            return false;
-          }
-        };
-        controllerContext = new ControllerContext(strategy);
-        throwMe = function() {
-          return controllerContext.isValidEvent('#fixture', 'onClick', {});
-        };
-        return expect(throwMe).to["throw"](ReferenceError);
-      });
-      it('should throw a ReferenceError if isValidEvent is called without a selector', function() {
-        var controllerContext, throwMe;
-        controllerContext = new ControllerContext({});
-        throwMe = function() {
-          return controllerContext.isValidEvent(null, 'onClick', {});
-        };
-        return expect(throwMe).to["throw"](ReferenceError);
-      });
-      it('should throw a ReferenceError if isValidEvent is called without a method', function() {
-        var controllerContext, throwMe;
-        controllerContext = new ControllerContext({});
-        throwMe = function() {
-          return controllerContext.isValidEvent('#fixture', null, {});
-        };
-        return expect(throwMe).to["throw"](ReferenceError);
-      });
-      it('should throw a ReferenceError if isValidEvent is called without an event', function() {
-        var controllerContext, throwMe;
-        controllerContext = new ControllerContext({});
-        throwMe = function() {
-          return controllerContext.isValidEvent('#fixture', 'onClick', null);
-        };
-        return expect(throwMe).to["throw"](ReferenceError);
-      });
-      it('should return true if the event and element exist', function() {
-        var controllerContext, result, strategy, view;
-        strategy = {
-          hasEvent: function() {
-            return true;
-          }
-        };
-        view = {
-          getElement: function() {
-            return document.getElementById('fixture');
-          }
-        };
-        controllerContext = new ControllerContext(strategy);
-        controllerContext.view = view;
-        result = controllerContext.isValidEvent('#fixture', {
-          type: 'click'
-        }, 'onClick');
-        return expect(result).to.be["true"];
-      });
-      it('should return false if the event doesn\'t exist and the element does', function() {
-        var controllerContext, result, strategy, view;
-        strategy = {
-          hasEvent: function() {
-            return false;
-          }
-        };
-        view = {
-          getElement: function() {
-            return document.getElementById('fixture');
-          }
-        };
-        controllerContext = new ControllerContext(strategy);
-        controllerContext.view = view;
-        result = controllerContext.isValidEvent('#fixture', {
-          type: 'click'
-        }, 'onClick');
-        return expect(result).to.be["false"];
-      });
-      return it('should return false if the event exists and the element doesn\'t', function() {
-        var controllerContext, result, strategy, view;
-        strategy = {
-          hasEvent: function() {
-            return true;
-          }
-        };
-        view = {
-          getElement: function() {
-            return document.getElementById('xfixture');
-          }
-        };
-        controllerContext = new ControllerContext(strategy);
-        controllerContext.view = view;
-        result = controllerContext.isValidEvent('#xfixture', {
-          type: 'click'
-        }, 'onClick');
-        return expect(result).to.be["false"];
       });
     });
   });

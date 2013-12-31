@@ -34,14 +34,6 @@
       it('should exist', function() {
         return expect(ViewComposite).to.exist;
       });
-      it('should set a parent', function() {
-        composite.setParent('foo');
-        return expect(composite.parent).to.equal('foo');
-      });
-      it('should get a parent', function() {
-        composite.setParent('bar');
-        return expect(composite.getParent()).to.equal('bar');
-      });
       it('should add children', function() {
         var child;
         expect(composite.list.count()).to.equal(0);

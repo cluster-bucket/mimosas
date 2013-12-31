@@ -25,16 +25,8 @@
       afterEach(function() {
         return leaf = void 0;
       });
-      it('should exist', function() {
+      return it('should exist', function() {
         return expect(ViewLeaf).to.exist;
-      });
-      it('should set a parent', function() {
-        leaf.setParent('foo');
-        return expect(leaf.parent).to.equal('foo');
-      });
-      return it('should get a parent', function() {
-        leaf.setParent('bar');
-        return expect(leaf.getParent()).to.equal('bar');
       });
     });
   });
