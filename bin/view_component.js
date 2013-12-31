@@ -77,7 +77,7 @@
       ViewComponent.prototype.closest = function(element, selector) {
         var parent;
         if (element === this.element) {
-          return;
+          return element;
         }
         if (this.elementMatchesSelector(element, selector)) {
           return element;
@@ -97,6 +97,7 @@
             continue;
           }
           matches = element[name](selector);
+          break;
         }
         return matches;
       };

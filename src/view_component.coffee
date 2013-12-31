@@ -51,7 +51,7 @@
         @controller.trigger method, e
 
       closest: (element, selector) ->
-        return if element is @element
+        return element if element is @element
         return element if @elementMatchesSelector element, selector
         parent = element.parentNode
         @closest parent, selector
@@ -62,6 +62,7 @@
           name = "#{prefix}MatchesSelector"
           continue unless element[name]
           matches = element[name] selector
+          break
         matches
 
       getElement: () ->
