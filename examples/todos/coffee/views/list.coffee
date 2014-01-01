@@ -1,23 +1,30 @@
 define [
   'mimosas/view_composite'
   'handlebars'
-  'cs!controllers/show'
-  'cs!views/show'
-], (ViewLeaf, Handlebars, ShowTodoController, ShowTodoView) ->
+], (ViewLeaf, Handlebars) ->
 
   class ListTodosView extends ViewLeaf
 
-    changed: (collection) ->
-      @display collection
+    changed: (model) ->
+      @display()
 
-    display: (collection) ->
-      return unless collection?
-      html = @toHtml collection.serialize()
-      @getElement().innerHTML = html
+    display: () ->
+      @toggleDisplay()
+      @displayList()
 
-    toHtml: (collection) ->
+    toggleDisplay: () ->
+      displayValue = 'block'
+      displayValue = 'none' if @getModel().count() is 0
+      @getElement().style.display = displayValue
+
+    displayList: () ->
+      html = @toHtml @getModel().serialize()
+      list = @getElementFromSelector '#todo-list'
+      list.innerHTML = html
+
+    toHtml: (data) ->
       template = @getTemplate()
-      template todos: collection
+      template todos: data
 
     getTemplate: () ->
       source = document.getElementById('list-todos-template').innerHTML

@@ -34,6 +34,9 @@ define [
     get: (pointer) ->
       @collection.get pointer
 
+    count: () ->
+      @collection.count()
+
     getIterator: () ->
       new Iterator @collection
 

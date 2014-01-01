@@ -53,6 +53,10 @@
         return this.controller.setModel(this.model);
       };
 
+      ViewComponent.prototype.getModel = function() {
+        return this.model;
+      };
+
       ViewComponent.prototype.setController = function(controller) {
         this.controller = new ControllerContext(controller);
         this.controller.setView(this);
