@@ -3,12 +3,12 @@ define [
   'cs!views/top'
   'cs!views/new'
   'cs!views/list'
-  'cs!views/toggle'
+  'cs!views/footer'
   'cs!controllers/new'
   'cs!controllers/list'
-  'cs!controllers/toggle'
-], (Todos, TopView, NewTodoView, ListTodosView, ToggleTodosView,
-  NewTodoController, ListTodosController, ToggleTodosController) ->
+  'cs!controllers/footer'
+], (Todos, TopView, NewTodoView, ListTodosView, FooterView,
+  NewTodoController, ListTodosController, FooterController) ->
 
   todos = new Todos()
 
@@ -17,18 +17,19 @@ define [
   newTodoView.setController new NewTodoController()
   newTodoView.addEvent 'keypress', '#new-todo', 'inputChanged'
 
-  toggleTodosView = new ToggleTodosView '#toggle-all'
-  toggleTodosView.setModel todos
-  toggleTodosView.setController new ToggleTodosController()
-  toggleTodosView.addEvent 'click', '#toggle-all', 'toggleAllClicked'
-
-  listTodosView = new ListTodosView '#todo-list'
+  listTodosView = new ListTodosView '#main'
   listTodosView.setModel todos
   listTodosView.setController new ListTodosController()
   listTodosView.addEvent 'click', '.destroy', 'destroyClicked'
   listTodosView.addEvent 'click', '.toggle', 'toggleClicked'
+  listTodosView.addEvent 'click', '#toggle-all', 'toggleAllClicked'
+
+  footerView = new FooterView '#footer'
+  footerView.setModel todos
+  footerView.setController new FooterController()
 
   topView = new TopView '#todoapp'
   topView.add newTodoView
   topView.add listTodosView
+  topView.add footerView
   topView.display()

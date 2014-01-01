@@ -12,3 +12,7 @@ define ['mimosas/controller_strategy'], (ControllerStrategy) ->
       pointer = element.dataset['id']
       completed = e.target.checked
       @getModel().setCompleted pointer, completed
+
+    toggleAllClicked: (e) ->
+      completed = e.target.checked
+      @getModel().setAllCompleted completed

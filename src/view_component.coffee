@@ -37,6 +37,9 @@
         @model.attach @
         @controller.setModel @model
 
+      getModel: () ->
+        @model
+
       setController: (controller) ->
         @controller = new ControllerContext controller
         @controller.setView @

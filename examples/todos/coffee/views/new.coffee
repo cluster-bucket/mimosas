@@ -7,5 +7,4 @@ define ['mimosas/view_leaf'], (ViewLeaf) ->
     # display: () ->
 
     clear: () ->
-      element = @getElementFromSelector('#new-todo')
-      element.value = ''
+      @getElement().value = ''
