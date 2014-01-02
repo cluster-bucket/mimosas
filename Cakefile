@@ -84,3 +84,8 @@ task 'install:modules', 'install node modules', ->
 task 'install', 'install all dependencies', ->
   invoke 'install:modules'
   invoke 'install:components'
+
+task 'server', 'start a server', ->
+  server = spawn './node_modules/.bin/coffee', ['./test/server.coffee']
+  server.stdout.on 'data', (data) -> console.log data.toString().trim()
+  server.stderr.on 'data', (data) -> console.error data.toString().trim()
