@@ -13,13 +13,13 @@
 				<input id="new-todo" placeholder="What needs to be done?" autofocus>
 			</header>
 			<!-- This section should be hidden by default and shown when there are todos -->
-			<section id="main">
+			<section id="main" style="display:none">
 				<input id="toggle-all" type="checkbox">
 				<label for="toggle-all">Mark all as complete</label>
 				<ul id="todo-list"></ul>
 			</section>
 			<!-- This footer should hidden by default and shown when there are todos -->
-			<footer id="footer">
+			<footer id="footer" style="display:none">
 				<!-- This should be `0 items left` by default -->
 				<span id="todo-count"><strong>1</strong> item left</span>
 				<!-- Remove this if you don't implement routing -->
@@ -59,7 +59,10 @@
 			</li>
 			{{/each}}
 		</script>
-		
+
+    <script id="todo-count-template" type="text/x-handlebars-template">
+      <strong>{{count}}</strong> item{{#if plural}}s{{/if}} left
+		</script>
 		<!-- Scripts here. Don't remove this ↓ -->
 		<script src="bower_components/todomvc-common/base.js"></script>
     <script src="bower_components/requirejs/require.js"></script>

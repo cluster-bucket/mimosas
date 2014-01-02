@@ -9,10 +9,10 @@ define [
       @display()
 
     display: () ->
-      @toggleDisplay()
+      @displayMain()
       @displayList()
 
-    toggleDisplay: () ->
+    displayMain: () ->
       displayValue = 'block'
       displayValue = 'none' if @getModel().count() is 0
       @getElement().style.display = displayValue

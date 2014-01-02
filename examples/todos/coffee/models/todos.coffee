@@ -23,6 +23,15 @@ define [
         i.next()
       @notify()
 
+    countUncompleted: () ->
+      count = 0
+      i = @getIterator()
+      while not i.isDone()
+        item = i.currentItem()
+        count += 1 if item.getCompleted() is false
+        i.next()
+      count
+
     append: (item) ->
       @collection.append item
       @notify()
