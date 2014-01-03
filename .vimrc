@@ -4,4 +4,4 @@ set shiftwidth=2
 set softtabstop=2
 
 " Use cake to run
-set makeprg=cake\ $*
+" set makeprg=./node_modules/.bin/cake\ $*
