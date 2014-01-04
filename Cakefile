@@ -60,7 +60,7 @@ task 'build:doc', 'generate API documentation', ->
   console.log '- Generating API documentation'
   cmd = "./node_modules/.bin/codo --name #{PROJECT_NAME} "
   cmd += "--title '#{PROJECT_NAME} API Documentation' ./src/*"
-  executeCommand cmd.join(' ')
+  executeCommand cmd
 
 task 'build:instrument', 'instrument code for coverage reports', ->
   console.log '- Instrumenting code for coverage reports'
