@@ -1,6 +1,7 @@
 {spawn, exec} = require 'child_process'
 fs = require 'fs'
 
+PROJECT_NAME = 'Mimosas'
 
 task 'test', 'test all the things', ->
   invoke 'build'
@@ -13,16 +14,17 @@ task 'test:globals', 'test browser globals', ->
 task 'test:amd', 'test browser AMD', ->
   testUrl 'http://localhost:8000/test/SpecRunnerAMD.html'
 
+task 'build', 'build test and source', ->
+  invoke 'clean'
+  invoke 'build:src'
+  invoke 'build:test'
+  invoke 'build:doc'
+
 task 'clean', 'clean the build directories', ->
   console.log '- Cleaning the build and test directories'
   cmd = 'rm -rf ./bin/* && rm -rf ./test/bin/*'
   exec cmd, (err, stdout, stderr) ->
     if err then console.error stderr else console.log stdout
-
-task 'build', 'build test and source', ->
-  invoke 'clean'
-  invoke 'build:src'
-  invoke 'build:test'
 
 task 'build:src', 'build the source', ->
   console.log '- Building the source files'
@@ -35,6 +37,17 @@ task 'build:test', 'build tests', ->
   compiler = spawn 'coffee', ['-o', 'test/bin/', '-c', 'test/spec/']
   compiler.stdout.on 'data', (data) -> console.log data.toString().trim()
   compiler.stderr.on 'data', (data) -> console.error data.toString().trim()
+
+task 'build:doc', 'generate API documentation', ->
+  console.log '- Generating API documentation'
+  cmd = [
+    './node_modules/.bin/codo'
+    "--name #{PROJECT_NAME}"
+    "--title '#{PROJECT_NAME} API Documentation'"
+    './src/*'
+  ]
+  exec cmd.join(' '), (err, stdout, stderr) ->
+    if err then console.error stderr else console.log stdout
 
 task 'server', 'start a server', ->
   server = spawn './node_modules/.bin/coffee', ['./test/server.coffee']
