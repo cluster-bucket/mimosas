@@ -60,8 +60,8 @@ objects to your hearts content. If you're using CoffeeScript it's very
 easy. For example:
 
 ```coffeescript
-class SongModel extends Mimosas.Subject
-class SongView extends Mimosas.Observer
+class SongModel extends Mimosas.ModelSubject
+class NewSongView extends Mimosas.ViewLeaf
 ```
 
 If you're using plain JavaScript, that's cool. You have to do a little
@@ -71,7 +71,7 @@ pattern with your constructor functions:
 
 ```javascript
 var MyClass = (function(classToExtend) {
-  Mimosas.extends(MyClass, classToExtend);
+  Mimosas.Util.Extends(MyClass, classToExtend);
   function MyClass() {}
   // ..prototypes
 })(ClassToExtend);
@@ -81,114 +81,97 @@ So our example above would look like:
 
 ```javascript
 var SongModel = (function(classToExtend) {
-  Mimosas.extends(SongModel, classToExtend);
+  Mimosas.Util.Extends(SongModel, classToExtend);
   function SongModel() {}
   // ..prototypes
-})(Mimosas.Subject);
+})(Mimosas.ModelSubject);
 
 var SongView = (function(classToExtend) {
-  Mimosas.extends(SongView, classToExtend);
+  Mimosas.Util.Extends(NewSongView, classToExtend);
   function SongView() {}
   // ..prototypes
-})(Mimosas.Observer);
+})(Mimosas.ViewLeaf);
 ```
 
 API Reference
 -------------
 
-Mimosas exposes two objects: Observer and Subject. If you've used the variable
-name `mimosas`, you can access these objects with `mimosas.Observer` and 
-`mimosas.Subject`.
+Mimosas exposes four main classes:
+
+* ModelSubject
+* ViewComposite
+* ViewLeaf
+* ControllerStrategy
+
+Additionaly, there are a number of utilities:
+
+* Util.Guid
+* Util.Extends
+
+### Architecture
+
+![UML Diagram](http://www.yuml.me2294b967)
+
+[Something about architecture should go here.]
 
     Mimosas = {}
-
-### Mimosas.Observer
-
-    Mimosas.Observer = class Observer
-      changed: (theChangedSubject) ->
-
-The Observer is an abstract class that's just here to make sure that
-your Concrete Observers have the `changed` method. Whenever it changes, 
-its `changed` method gets called and the Subject that was changed will 
-be passed in as a parameter. You'll need to use the changed subject to 
-find out what happened so that you can sync up your Observer with the 
-new "state" of the Subject. You make Concrete Observers by extending 
-the Observer like this:
-
-```
-class ConcreteObserver extends Mimosas.Observer
-  update: (theChangedSubject) ->
-    console.log "Updated"
-```
 
 ### Mimosas.List
 
     Mimosas.List = class List
       constructor: () ->
-        # A list of pointers
-        @items = []
-        # Objects passed in by pointer
-        @objects = {}
+        @pointers = []
+        @items = {}
 
-      # Returns the number of objects in the list
       count: () ->
-        @items.length
+        @pointers.length
 
-      # Returns the object at the given length
+      get: (pointer) ->
+        @items[pointer]
+
       getByIndex: (index) ->
         throw new Error 'ArrayOutOfBoundsException' if index >= @count()
         throw new Error 'ArrayOutOfBoundsException' if index < 0
-        @objects[@items[index]]
+        @items[@pointers[index]]
 
-      # Returns the object with the given pointer
-      get: (pointer) ->
-        @objects[pointer]
-
-      # Returns the first object in the list
       first: () ->
-        @objects[@items[0]]
+        @items[@pointers[0]]
 
-      # Returns the last object in the list
       last: () ->
-        @objects[@items[@items.length - 1]]
+        @items[@pointers[@pointers.length - 1]]
 
-      # Adds the argument to the list, making it the last item
       append: (item) ->
         throw new Error 'NullPointerException' unless item.__POINTER__?
         pointer = item.__POINTER__
-        @items.push pointer
-        @objects[pointer] = item
+        @pointers.push pointer
+        @items[pointer] = item
 
-      # Removes the given element from the list.
       remove: (pointer) ->
         throw new Error 'ArgumentException' unless pointer?
-        throw new Error 'ListItemUndefined' unless @objects[pointer]?
+        throw new Error 'ListItemUndefined' unless @items[pointer]?
 
         index = -1
-        for item, i in @items
+        for item, i in @pointers
           if item is pointer
             index = i
             break
 
         throw new Error 'ListItemUndefined' if index is -1
 
-        delete @objects[pointer]
-        @items.splice index, 1
+        delete @items[pointer]
+        @pointers.splice index, 1
 
-      # Removes the last element from the list
       removeLast: () ->
         item = @last()
         @remove item.__POINTER__
 
-      # Removes the first element from the list
       removeFirst: () ->
         item = @first()
         @remove item.__POINTER__
 
-      # Removes all elements from the list
       removeAll: () ->
-        @items = []
-        @objects = {}
+        @pointers = []
+        @items = {}
 
 ### Mimosas.Iterator
 
@@ -202,18 +185,184 @@ class ConcreteObserver extends Mimosas.Observer
     # * Implements the Iterator interface
     # * Keeps track of the current position in the traversal
     #   of the aggregate
-    Mimosas.Iterator = class ConcreteIterator extends Iterator
+    Mimosas.Iterator = class Iterator
       constructor: (@list) ->
         @current = 0
       first: () ->
         @current = 0
+        @
       next: () ->
         @current += 1
+        @
       isDone: () ->
         @current >= @list.count()
       currentItem: () ->
         throw new Error "IteratorOutOfBounds" if @isDone()
-        @list.get @current
+        @list.getByIndex @current
+
+### Mimosas.ModelSubject
+
+The Subject is what makes things tick. It keeps a running list of all
+its Observers in a List and it can have as many Observers as needed.
+
+You can attach Observers to the Subject via the `attach` method and if
+you want to stop notifying an Observer you can simply pass the whole
+Observer into the `detach` method.`
+
+Whenever something important happens in your Subject, you'll want to 
+call notify. That will call the `changed` method on all of the Observers
+that are attached, letting each know that something has been changed.
+
+    Mimosas.ModelSubject = class ModelSubject
+
+      constructor: () ->
+        @observers = new List()
+
+      attach: (obj) ->
+        @observers.append obj
+
+      detach: (observer) ->
+        @observers.remove observer
+
+      notify: () ->
+        i = new Iterator @observers
+        while not i.isDone()
+          i.currentItem().changed @
+          i.next()
+
+Your Concrete Subject just keeps track of whatever it thinks is
+important in the Concrete Observer. You can create create on by
+extending the Subject.
+
+```coffeescript
+class ConcreteSubject extends Mimosas.Subject
+```
+
+### Mimosas.ControllerContext
+
+    Mimosas.ControllerContext = class ControllerContext
+
+      constructor: (@strategy) ->
+        throw new Error 'ArgumentException' unless @strategy?
+
+      trigger: (method, e) ->
+        if @strategy[method]?
+          @strategy[method].call @strategy, e
+
+      setModel: (model) ->
+        @strategy.setModel model
+
+      getModel: () ->
+        @strategy.getModel()
+
+      setView: (@view) ->
+        @strategy.setView @view
+
+### Mimosas.ControllerStrategy
+
+    Mimosas.ControllerStrategy = class ControllerStrategy
+      constructor: () ->
+      setModel: (@model) ->
+      getModel: () -> @model
+      setView: (@view) ->
+      getView: () -> @view
+
+### Mimosas.ViewObserver
+
+The Observer is an abstract class that's just here to make sure that
+your Concrete Observers have the `changed` method. Whenever it changes, 
+its `changed` method gets called and the Subject that was changed will 
+be passed in as a parameter. You'll need to use the changed subject to 
+find out what happened so that you can sync up your Observer with the 
+new "state" of the Subject. You make Concrete Observers by extending 
+the Observer like this:
+
+```coffeescript
+class ConcreteObserver extends Mimosas.Observer
+  update: (theChangedSubject) ->
+    console.log "Updated"
+```
+
+    Mimosas.ViewObserver = class ViewObserver
+      constructor: () ->
+        @__POINTER__ = Guid.generate()
+
+      changed: (theChangedSubject) ->
+
+### Mimosas.ViewComponent
+
+    Mimosas.ViewComponent = class ViewComponent extends ViewObserver
+      constructor: (selector) ->
+        super
+        throw new ReferenceError 'selector' unless selector
+        @element = @getElementFromSelector selector
+        throw new ReferenceError '@element' unless @element
+        @controller = new ControllerContext new ControllerStrategy()
+
+      # Opt for simplicity over efficiency and compatibility
+      getElementFromSelector: (selector) ->
+        # After the element is set all calls will be scoped to it
+        scope = @element or document
+        nodes = scope.querySelectorAll selector
+        return nodes[0] if nodes.length > 0
+        return
+
+      setModel: (@model) ->
+        @model.attach @
+        @controller.setModel @model
+
+      getModel: () ->
+        @model
+
+      setController: (controller) ->
+        @controller = new ControllerContext controller
+        @controller.setView @
+        @controller.setModel(@model) if @model?
+
+      addEvent: (type, selector, method) ->
+        handler = @triggerEvent.bind @, method, selector
+        @element.addEventListener type, handler, false
+
+      triggerEvent: (method, selector, e) ->
+        return unless @elementMatchesSelector e.target, selector
+        @controller.trigger method, e
+
+      closest: (element, selector) ->
+        return element if element is @element
+        return element if @elementMatchesSelector element, selector
+        parent = element.parentNode
+        @closest parent, selector
+
+      elementMatchesSelector: (element, selector) ->
+        matches = false
+        for prefix in ['webkit', 'moz', 'ms']
+          name = "#{prefix}MatchesSelector"
+          continue unless element[name]
+          matches = element[name] selector
+          break
+        matches
+
+      getElement: () ->
+        @element
+
+      display: () ->
+
+### Mimosas.ViewComposite
+
+    Mimosas.ViewComposite = class ViewComposite extends ViewComponent
+      constructor: () ->
+        super
+        @list = new List()
+
+      add: (component) ->
+        @list.append component
+
+      remove: (pointer) ->
+        @list.remove pointer
+
+### Mimosas.ViewLeaf
+
+    Mimosas.ViewLeaf = class ViewLeaf extends ViewComponent
 
 ### Mimosas.Aggregate
 
@@ -231,49 +380,24 @@ class ConcreteObserver extends Mimosas.Observer
           list.append val
         new Mimosas.Iterator list
 
-### Mimosas.Subject
+### Mimosas.Util
 
-The Subject is what makes things tick. It keeps a running list of all
-its Observers in a List and it can have as many Observers as needed.
+    Mimosas.Util = {}
 
-You can attach Observers to the Subject via the `attach` method and if
-you want to stop notifying an Observer you can simply pass the whole
-Observer into the `detach` method.`
+### Mimosas.Util.Guid
 
-Whenever something important happens in your Subject, you'll want to 
-call notify. That will call the `changed` method on all of the Observers
-that are attached, letting each know that something has been changed.
+* [How to create a GUID / UUID in Javascript?](http://stackoverflow.com/a/105074)
+* [Generate GUID-like GUIDs w/ CoffeeScript](https://gist.github.com/matthewhudson/5760422)
 
-    Mimosas.Subject = class Subject
-
-      counter = 0
-      observers = new Mimosas.List()
-
-      attach: (obj) ->
-        obj.__POINTER__ = @counter
-        observers.append obj
-        counter += 1
-
-      detach: (observer) ->
-        observers.remove observer
-
-      notify: () ->
-        i = new Mimosas.Iterator observers
-        while not i.isDone()
-          i.currentItem().changed @
-          i.next()
-
-Your Concrete Subject just keeps track of whatever it thinks is
-important in the Concrete Observer. You can create create on by
-extending the Subject.
-
-```coffeescript
-class ConcreteSubject extends Mimosas.Subject
-```
+    Mimosas.Util.Guid = class Guid
+      @generate: () ->
+        S4 = () ->
+          (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+        "#{S4()}#{S4()}-#{S4()}-#{S4()}-#{S4()}-#{S4()}#{S4()}#{S4()}"
 
 ### Mimosas.extends
 
-    Mimosas['extends'] = `__extends`
+    Mimosas.Util.Extends = `__extends`
 
 Including Mimosas
 -----------------
