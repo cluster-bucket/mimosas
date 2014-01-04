@@ -110,7 +110,7 @@ Additionaly, there are a number of utilities:
 
 ### Architecture
 
-![UML Diagram](http://www.yuml.me/2294b967.jpg)
+![UML Diagram](http://www.yuml.me/2294b967)
 
 Something about architecture should go here.
 
