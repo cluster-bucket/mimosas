@@ -12,20 +12,20 @@
     <script src="../bower_components/chai/chai.js"></script>
     <script>
       mocha.ui('bdd');
-      mocha.reporter('html');
+      mocha.reporter('html-cov');
       expect = chai.expect;
     </script>
     <!-- Scripts -->
-    <script data-cover src="../bin/list.js"></script>
-    <script data-cover src="../bin/iterator.js"></script>
-    <script data-cover src="../bin/guid.js"></script>
-    <script data-cover src="../bin/model_subject.js"></script>
-    <script data-cover src="../bin/controller_context.js"></script>
-    <script data-cover src="../bin/controller_strategy.js"></script>
-    <script data-cover src="../bin/view_observer.js"></script>
-    <script data-cover src="../bin/view_component.js"></script>
-    <script data-cover src="../bin/view_composite.js"></script>
-    <script data-cover src="../bin/view_leaf.js"></script>
+    <script src="coverage/instrumented/list.js"></script>
+    <script src="coverage/instrumented/iterator.js"></script>
+    <script src="coverage/instrumented/guid.js"></script>
+    <script src="coverage/instrumented/model_subject.js"></script>
+    <script src="coverage/instrumented/controller_context.js"></script>
+    <script src="coverage/instrumented/controller_strategy.js"></script>
+    <script src="coverage/instrumented/view_observer.js"></script>
+    <script src="coverage/instrumented/view_component.js"></script>
+    <script src="coverage/instrumented/view_composite.js"></script>
+    <script src="coverage/instrumented/view_leaf.js"></script>
     <!-- Specs -->
     <script src="bin/list.spec.js"></script>
     <script src="bin/iterator.spec.js"></script>

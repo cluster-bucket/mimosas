@@ -1,6 +1,6 @@
 {
-  "name": "my-controller",
-  "description": "A pattern based MVC app",
+  "name": "Mimosas",
+  "description": "Mimosas is my observer/subject application starter",
   "version": "0.1.0",
   "main": "mimosas.litcoffee",
   "scripts": {
@@ -22,6 +22,7 @@
     "phantomjs": "~1.9.2-5",
     "connect": "~2.12.0",
     "bower": "~1.2.8",
-    "codo": "~2.0.3"
+    "codo": "~2.0.3",
+    "mocha-browser": "~0.2.0"
   }
 }

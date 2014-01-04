@@ -1,7 +1,7 @@
 {
   "name": "Mimosas",
   "main": "",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "homepage": "https://github.com/dustinboston/mimosas",
   "authors": [
     "Dustin Boston <dustin@dblogit.com>"
@@ -16,6 +16,6 @@
   "devDependencies": {
     "requirejs": "~2.1.9",
     "mocha": "~1.15.1",
-    "chai": "~1.8.1"
+    "chai": "~1.8.1",
   }
 }
