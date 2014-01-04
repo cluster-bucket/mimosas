@@ -64,6 +64,12 @@ task 'build:doc', 'generate API documentation', ->
 
 task 'build:instrument', 'instrument code for coverage reports', ->
   console.log '- Instrumenting code for coverage reports'
+  unless fs.existsSync './test/coverage'
+    fs.mkdir './test/coverage'
+
+  unless fs.existsSync './test/coverage/instrumented'
+    fs.mkdir './test/coverage/instrumented'
+
   cmd = 'jscoverage ./bin/ ./test/coverage/instrumented/'
   exec cmd, (err, stdout, stderr) ->
     if err then console.error stderr else console.log stdout
