@@ -110,9 +110,9 @@ Additionaly, there are a number of utilities:
 
 ### Architecture
 
-![UML Diagram](http://www.yuml.me2294b967)
+![UML Diagram](http://www.yuml.me/2294b967.jpg)
 
-[Something about architecture should go here.]
+Something about architecture should go here.
 
     Mimosas = {}
 
