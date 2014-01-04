@@ -11,8 +11,8 @@
     return
 ) @, () ->
 
-  # http://stackoverflow.com/a/105074
-  # https://gist.github.com/matthewhudson/5760422
+  # * [How to create a GUID / UUID in Javascript?](http://stackoverflow.com/a/105074)
+  # * [Generate GUID-like GUIDs w/ CoffeeScript](https://gist.github.com/matthewhudson/5760422)
   class Guid
     @generate: () ->
       S4 = () ->
