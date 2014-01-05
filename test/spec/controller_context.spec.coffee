@@ -1,25 +1,21 @@
 ((root, factory) ->
   if typeof define is 'function' and define.amd
-    define ['../../bin/controller_context'], factory
-    return
+    define ['../../mimosas'], factory
   else if typeof exports is 'object'
-    ControllerContext = require '../../src/controller_context.coffee'
-    module.exports = factory ControllerContext
-    return
+    lib = require '../../src/mimosas.coffee'
+    module.exports = factory lib
   else
-    ControllerContext = root.Mimosas.ControllerContext
-    factory ControllerContext
-    return
-) @, (ControllerContext) ->
+    factory root.Mimosas
+) @, (Mimosas) ->
 
-  describe 'ControllerContext', ->
+  describe 'Mimosas.ControllerContext', ->
 
     it 'should exist', ->
-      expect(ControllerContext).to.exist
+      expect(Mimosas.ControllerContext).to.exist
 
     it 'should throw when a strategy is not passed into its constructor', ->
       throwMe = ->
-        controllerContext = new ControllerContext()
+        controllerContext = new Mimosas.ControllerContext()
       expect(throwMe).to.throw()
 
     it 'should set a model on the strategy', ->
@@ -27,7 +23,7 @@
       strategy =
         setModel: (model) ->
           passedModel = model
-      controllerContext = new ControllerContext strategy
+      controllerContext = new Mimosas.ControllerContext strategy
       controllerContext.setModel 'foo'
       expect(passedModel).to.equal 'foo'
 
@@ -35,7 +31,7 @@
       strategy =
         getModel: () ->
           'foo'
-      controllerContext = new ControllerContext strategy
+      controllerContext = new Mimosas.ControllerContext strategy
       model = controllerContext.getModel()
       expect(model).to.equal 'foo'
 

@@ -1,38 +1,33 @@
 ((root, factory) ->
   if typeof define is 'function' and define.amd
-    define ['../../bin/view_component', '../../bin/view_observer'], factory
-    return
+    define ['../../mimosas'], factory
   else if typeof exports is 'object'
-    ViewComponent = require '../../src/view_component.coffee'
-    ViewObserver = require '../../src/view_observer.coffee'
-    module.exports = factory ViewComponent, ViewObserver
-    return
+    lib = require '../../src/mimosas.coffee'
+    module.exports = factory lib
   else
-    ViewComponent = root.Mimosas.ViewComponent
-    ViewObserver = root.Mimosas.ViewObserver
-    factory ViewComponent, ViewObserver
-    return
-) @, (ViewComponent, ViewObserver) ->
+    factory root.Mimosas
+) @, (Mimosas) ->
 
-  describe 'ViewComponent', ->
+  describe 'Mimosas.ViewComponent', ->
 
     component = undefined
+    document.body.innerHTML += '<div id="fixture"><div id="fixture-child"></div></div>'
 
     beforeEach ->
-      component = new ViewComponent('#fixture')
+      component = new Mimosas.ViewComponent('#fixture')
 
     afterEach ->
       component = undefined
 
     it 'should exist', ->
-      expect(ViewComponent).to.exist
+      expect(Mimosas.ViewComponent).to.exist
 
     it 'should throw if a selector is not passed to the constructor', ->
-      throwMe = -> new ViewComponent()
+      throwMe = -> new Mimosas.ViewComponent()
       expect(throwMe).to.throw()
 
     it 'should throw if selector doesn\'t resolve to an element', ->
-      throwMe = -> new ViewComponent('#foo')
+      throwMe = -> new Mimosas.ViewComponent('#foo')
       expect(throwMe).to.throw()
 
     it 'should create an element instance variable when instantiated with a valid selector', ->
@@ -42,7 +37,7 @@
       expect(component.controller).to.exist
 
     it 'should get an element from a selector, scoped to the instances current element', ->
-      component = new ViewComponent 'body'
+      component = new Mimosas.ViewComponent 'body'
       element = component.getElementFromSelector '#fixture'
       expect(element).to.exist
 

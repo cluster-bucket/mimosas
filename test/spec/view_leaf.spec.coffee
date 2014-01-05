@@ -1,30 +1,23 @@
 ((root, factory) ->
   if typeof define is 'function' and define.amd
-    define ['../../bin/view_leaf', '../../bin/view_component', '../../bin/view_observer'], factory
-    return
+    define ['../../mimosas'], factory
   else if typeof exports is 'object'
-    ViewLeaf = require '../../src/view_leaf.coffee'
-    ViewComponent = require '../../src/view_component.coffee'
-    ViewObserver = require '../../src/view_observer.coffee'
-    module.exports = factory ViewLeaf, ViewComponent, ViewObserver
-    return
+    lib = require '../../src/mimosas.coffee'
+    module.exports = factory lib
   else
-    ViewLeaf = root.Mimosas.ViewLeaf
-    ViewComponent = root.Mimosas.ViewComponent
-    ViewObserver = root.Mimosas.ViewObserver
-    factory ViewLeaf, ViewComponent, ViewObserver
-    return
-) @, (ViewLeaf, ViewComponent, ViewObserver) ->
+    factory root.Mimosas
+) @, (Mimosas) ->
 
-  describe 'ViewLeaf', ->
+  describe 'Mimosas.ViewLeaf', ->
 
     leaf = undefined
+    document.body.innerHTML += '<div id="fixture"><div id="fixture-child"></div></div>'
 
     beforeEach ->
-      leaf = new ViewLeaf('#fixture')
+      leaf = new Mimosas.ViewLeaf('#fixture')
 
     afterEach ->
       leaf = undefined
 
     it 'should exist', ->
-      expect(ViewLeaf).to.exist
+      expect(Mimosas.ViewLeaf).to.exist

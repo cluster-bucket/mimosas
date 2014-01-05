@@ -1,35 +1,19 @@
-((root, factory) ->
-  if typeof define is 'function' and define.amd
-    define ['./list', './iterator'], factory
-    return
-  else if typeof exports is 'object'
-    List = require('./list')
-    Iterator = require('./iterator')
-    module.exports = factory(List, Iterator)
-    return
-  else
-    root.Mimosas = {} unless root.Mimosas?
-    List = root.Mimosas.List
-    Iterator = root.Mimosas.Iterator
-    root.Mimosas.ModelSubject = factory(List, Iterator)
-    return
-) @, (List, Iterator) ->
+{List} = require './list'
+{Iterator} = require './iterator'
 
-  class ModelSubject
+class exports.ModelSubject
+  constructor: () ->
+    @observers = new List()
 
-    constructor: () ->
-      @observers = new List()
+  attach: (obj) ->
+    @observers.append obj
 
-    attach: (obj) ->
-      @observers.append obj
+  detach: (observer) ->
+    @observers.remove observer
 
-    detach: (observer) ->
-      @observers.remove observer
+  notify: () ->
+    i = new Iterator @observers
+    while not i.isDone()
+      i.currentItem().changed @
+      i.next()
 
-    notify: () ->
-      i = new Iterator @observers
-      while not i.isDone()
-        i.currentItem().changed @
-        i.next()
-
-  ModelSubject

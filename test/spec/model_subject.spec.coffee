@@ -1,44 +1,40 @@
 ((root, factory) ->
   if typeof define is 'function' and define.amd
-    define ['../../bin/model_subject'], factory
-    return
+    define ['../../mimosas'], factory
   else if typeof exports is 'object'
-    List = require '../../src/model_subject.coffee'
-    module.exports = factory List
-    return
+    lib = require '../../src/mimosas.coffee'
+    module.exports = factory lib
   else
-    ModelSubject = root.Mimosas.ModelSubject
-    factory ModelSubject
-    return
-) @, (ModelSubject) ->
+    factory root.Mimosas
+) @, (Mimosas) ->
 
-  describe 'ModelSubject', ->
-    
+  describe 'Mimosas.ModelSubject', ->
+
     subject = undefined
-    
+
     beforeEach ->
-      subject = new ModelSubject()
-    
+      subject = new Mimosas.ModelSubject()
+
     afterEach ->
       subject = undefined
-      
+
     mockObserver = (pointer, callback) ->
       __POINTER__: pointer, changed: callback or ->
-      
+
     it 'should exist', ->
-      expect(ModelSubject).to.exist
-      
+      expect(Mimosas.ModelSubject).to.exist
+
     it 'should attach an item', ->
       expect(subject.observers.count()).to.equal 0
       subject.attach mockObserver 'foo'
       expect(subject.observers.count()).to.equal 1
-      
+
     it 'should detatch an item', ->
       subject.attach mockObserver 'foo'
       expect(subject.observers.count()).to.equal 1
       subject.detach 'foo'
       expect(subject.observers.count()).to.equal 0
-      
+
     it 'should notify observers', ->
       isChanged = false
       subject.attach mockObserver 'foo', () ->

@@ -3,26 +3,23 @@
   var __slice = [].slice;
 
   (function(root, factory) {
-    var Iterator, List;
+    var lib;
     if (typeof define === 'function' && define.amd) {
-      define(['../../bin/iterator', '../../bin/list'], factory);
+      return define(['../../mimosas'], factory);
     } else if (typeof exports === 'object') {
-      Iterator = require('../../src/iterator.coffee');
-      List = require('../../src/list.coffee');
-      module.exports = factory(Iterator, List);
+      lib = require('../../src/mimosas.coffee');
+      return module.exports = factory(lib);
     } else {
-      Iterator = root.Mimosas.Iterator;
-      List = root.Mimosas.List;
-      factory(Iterator, List);
+      return factory(root.Mimosas);
     }
-  })(this, function(Iterator, List) {
-    return describe('Iterator', function() {
+  })(this, function(Mimosas) {
+    return describe('Mimosas.Iterator', function() {
       var makeIterator;
       makeIterator = function() {
         var item, items, iterator, list, _i, _len;
         items = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-        list = new List();
-        iterator = new Iterator(list);
+        list = new Mimosas.List();
+        iterator = new Mimosas.Iterator(list);
         for (_i = 0, _len = items.length; _i < _len; _i++) {
           item = items[_i];
           list.append({
@@ -35,7 +32,7 @@
         };
       };
       it('should exist', function() {
-        return expect(Iterator != null).to.be["true"];
+        return expect(Mimosas.Iterator != null).to.be["true"];
       });
       it('should be done when list is empty', function() {
         var iterator, list, _ref;

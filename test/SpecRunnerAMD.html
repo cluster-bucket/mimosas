@@ -18,8 +18,8 @@
     <script src="../bower_components/requirejs/require.js"></script>
     <script>
       require([
-        'bin/list.spec', 
-        'bin/iterator.spec', 
+        'bin/list.spec',
+        'bin/iterator.spec',
         'bin/guid.spec',
         'bin/model_subject.spec',
         'bin/view_observer.spec',
@@ -28,6 +28,7 @@
         'bin/view_leaf.spec',
         'bin/controller_context.spec'
       ], function () {
+        var args = [].slice(arguments);
         if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
         else { mocha.run(); }
       });

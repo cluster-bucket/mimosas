@@ -1,18 +1,14 @@
 ((root, factory) ->
   if typeof define is 'function' and define.amd
-    define ['../../bin/list'], factory
-    return
+    define ['../../mimosas'], factory
   else if typeof exports is 'object'
-    List = require '../../src/list.coffee'
-    module.exports = factory List
-    return
+    lib = require '../../src/mimosas.coffee'
+    module.exports = factory lib
   else
-    List = root.Mimosas.List
-    factory List
-    return
-) @, (List) ->
+    factory root.Mimosas
+) @, (Mimosas) ->
 
-  describe 'List', ->
+  describe 'Mimosas.List', ->
 
     list = undefined
 
@@ -28,13 +24,13 @@
         list.append item
 
     beforeEach ->
-      list = new List()
+      list = new Mimosas.List()
 
     afterEach ->
       list = undefined
 
     it 'should exist', ->
-      expect(List).to.exist
+      expect(Mimosas.List).to.exist
 
     it 'should have a zero count on init', ->
       expect(list.count()).to.equal 0
@@ -111,6 +107,3 @@
       expect(list.count()).to.equal 2
       list.removeAll()
       expect(list.count()).to.equal 0
-
-  return
-

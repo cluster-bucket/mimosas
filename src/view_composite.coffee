@@ -1,29 +1,14 @@
-((root, factory) ->
-  if typeof define is 'function' and define.amd
-    define ['./view_component', './list'], factory
-    return
-  else if typeof exports is 'object'
-    ViewComponent = require './view_component'
-    List = require './list'
-    module.exports = factory(ViewComponent, List)
-    return
-  else
-    root.Mimosas = {} unless root.Mimosas?
-    ViewComponent = root.Mimosas.ViewComponent
-    List = root.Mimosas.List
-    root.Mimosas.ViewComposite = factory(ViewComponent, List)
-    return
-) @, (ViewComponent, List) ->
+{ViewComponent} = require './view_component'
+{List} = require './list'
 
-  class ViewComposite extends ViewComponent
-    constructor: () ->
-      super
-      @list = new List()
+class exports.ViewComposite extends ViewComponent
+  constructor: () ->
+    super
+    @list = new List()
 
-    add: (component) ->
-      @list.append component
+  add: (component) ->
+    @list.append component
 
-    remove: (pointer) ->
-      @list.remove pointer
+  remove: (pointer) ->
+    @list.remove pointer
 
-  ViewComposite
