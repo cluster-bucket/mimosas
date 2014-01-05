@@ -1,7 +1,8 @@
-node_modules
+bin
 bower_components
-doc
+node_modules
 test/server.log
+test/bin
 test/coverage
 examples/todo/bower_components
 *.swp
