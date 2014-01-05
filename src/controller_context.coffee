@@ -1,4 +1,4 @@
-class exports.ControllerContext
+class ControllerContext
 
   constructor: (@strategy) ->
     throw new Error 'ArgumentException' unless @strategy?
@@ -15,3 +15,5 @@ class exports.ControllerContext
 
   setView: (@view) ->
     @strategy.setView @view
+
+exports.ControllerContext = ControllerContext

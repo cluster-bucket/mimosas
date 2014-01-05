@@ -1,7 +1,7 @@
 {ViewComponent} = require './view_component'
 {List} = require './list'
 
-class exports.ViewComposite extends ViewComponent
+class ViewComposite extends ViewComponent
   constructor: () ->
     super
     @list = new List()
@@ -12,3 +12,4 @@ class exports.ViewComposite extends ViewComponent
   remove: (pointer) ->
     @list.remove pointer
 
+exports.ViewComposite = ViewComposite

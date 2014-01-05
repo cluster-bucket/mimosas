@@ -1,4 +1,4 @@
-class exports.List
+class List
   constructor: () ->
     @pointers = []
     @items = {}
@@ -52,3 +52,5 @@ class exports.List
   removeAll: () ->
     @pointers = []
     @items = {}
+
+exports.List = List
