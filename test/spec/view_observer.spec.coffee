@@ -1,26 +1,22 @@
 ((root, factory) ->
   if typeof define is 'function' and define.amd
-    define ['../../bin/view_observer'], factory
-    return
+    define ['../../mimosas'], factory
   else if typeof exports is 'object'
-    ViewObserver = require '../../src/view_observer.coffee'
-    module.exports = factory ViewObserver
-    return
+    lib = require '../../src/mimosas.coffee'
+    module.exports = factory lib
   else
-    ViewObserver = root.Mimosas.ViewObserver
-    factory ViewObserver
-    return
-) @, (ViewObserver) ->
+    factory root.Mimosas
+) @, (Mimosas) ->
 
-  describe 'ViewObserver', ->
+  describe 'Mimosas.ViewObserver', ->
 
     it 'should exist', ->
-      expect(ViewObserver).to.exist
-  
+      expect(Mimosas.ViewObserver).to.exist
+
     it 'should have a changed event', ->
-      observer = new ViewObserver()
+      observer = new Mimosas.ViewObserver()
       expect(observer.changed).to.exist
-      
+
     it 'should have a pointer', ->
-      observer = new ViewObserver()
+      observer = new Mimosas.ViewObserver()
       expect(observer.__POINTER__).to.exist

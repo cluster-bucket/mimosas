@@ -1,27 +1,20 @@
 ((root, factory) ->
   if typeof define is 'function' and define.amd
-    define ['../../bin/view_composite', '../../bin/view_component', '../../bin/view_observer'], factory
-    return
+    define ['../../mimosas'], factory
   else if typeof exports is 'object'
-    ViewComposite = require '../../src/view_composite.coffee'
-    ViewComponent = require '../../src/view_component.coffee'
-    ViewObserver = require '../../src/view_observer.coffee'
-    module.exports = factory ViewComposite, ViewComponent, ViewObserver
-    return
+    lib = require '../../src/mimosas.coffee'
+    module.exports = factory lib
   else
-    ViewComposite = root.Mimosas.ViewComposite
-    ViewComponent = root.Mimosas.ViewComponent
-    ViewObserver = root.Mimosas.ViewObserver
-    factory ViewComposite, ViewComponent, ViewObserver
-    return
-) @, (ViewComposite, ViewComponent, ViewObserver) ->
+    factory root.Mimosas
+) @, (Mimosas) ->
 
-  describe 'ViewComposite', ->
+  describe 'Mimosas.ViewComposite', ->
 
     composite = undefined
+    document.body.innerHTML += '<div id="fixture"><div id="fixture-child"></div></div>'
 
     beforeEach ->
-      composite = new ViewComposite('#fixture')
+      composite = new Mimosas.ViewComposite('#fixture')
 
     afterEach ->
       composite = undefined
@@ -31,7 +24,7 @@
       setParent: () ->
 
     it 'should exist', ->
-      expect(ViewComposite).to.exist
+      expect(Mimosas.ViewComposite).to.exist
 
     it 'should add children', ->
       expect(composite.list.count()).to.equal 0

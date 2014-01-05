@@ -1,28 +1,60 @@
 {spawn, exec} = require 'child_process'
+{EOL} = require 'os'
 fs = require 'fs'
 
-PROJECT_NAME = 'Mimosas'
+Mimosas = require './src/mimosas'
 
-task 'clean', 'clean the build directories', ->
-  console.log '- Cleaning build directories'
-  invoke 'clean:bin'
-  invoke 'clean:testbin'
-  invoke 'clean:coverage'
+header = """
+/**
+ * Mimosas v#{Mimosas.VERSION}
+ * https://github.com/dustinboston/mimosas
+ *
+ * Copyright 2013-2014, Dustin boston
+ * Released under the GPL License
+ */
+"""
 
-task 'clean:bin', 'clean the bin directory', ->
-  console.log '- Cleaning bin directory'
-  executeCommand 'rm -rf ./bin/*'
+orderedSourceFiles = [
+  'list'
+  'iterator'
+  'guid'
+  'model_subject'
+  'controller_context'
+  'controller_strategy'
+  'view_observer'
+  'view_component'
+  'view_composite'
+  'view_leaf'
+  'mimosas'
+]
 
-task 'clean:testbin', 'clean the test/bin directory', ->
-  console.log '- Cleaning test/bin directory'
-  executeCommand 'rm -rf ./test/bin/*'
+browserWrapper = """
+  (function(root) {
+    var Mimosas = function() {
+      function require(path) { return require[path]; }
 
-task 'clean:coverage', 'clean the coverage directory', ->
-  console.log '- Cleaning test/coverage directory'
-  cmd = ['rm -f ./test/coverage/index.html', 'rm -rf ./test/coverage/instrumented/*']
-  executeCommand cmd.join(' && ')
+  {{modules}}
 
+      return require['./mimosas'];
+    }();
 
+    if (typeof define === 'function' && define.amd) {
+      define(function() { return Mimosas; });
+    } else {
+      root.Mimosas = Mimosas;
+    }
+  }(this));
+"""
+
+moduleWrapper = """
+  require['./{{file}}'] = (function() {
+    var exports = {}, module = {exports: exports};
+
+  {{module}}
+
+    return module.exports;
+  })();\n\n
+"""
 
 task 'test', 'test all the things', ->
   console.log '- Running unit tests'
@@ -36,30 +68,30 @@ task 'test:globals', 'test browser globals', ->
 task 'test:amd', 'test browser AMD', ->
   testUrl 'http://localhost:8000/test/SpecRunnerAMD.html'
 
-
-
 task 'build', 'build test and source', ->
   invoke 'clean'
-  invoke 'build:src'
-  invoke 'build:test'
-  invoke 'build:doc'
+  buildSource ->
+    invoke 'build:browser'
+    invoke 'build:doc'
+  buildTests()
 
-task 'build:src', 'build the source', ->
-  console.log '- Building the source files'
-  compiler = spawn 'coffee', ['-o', 'bin/', '-c', 'src/']
-  compiler.stdout.on 'data', (data) -> console.log data.toString().trim()
-  compiler.stderr.on 'data', (data) -> console.error data.toString().trim()
-
-task 'build:test', 'build tests', ->
-  console.log '- Building the test files'
-  compiler = spawn 'coffee', ['-o', 'test/bin/', '-c', 'test/spec/']
-  compiler.stdout.on 'data', (data) -> console.log data.toString().trim()
-  compiler.stderr.on 'data', (data) -> console.error data.toString().trim()
+task 'build:browser', 'rebuild the merged script for inclusion in the browser', ->
+  modules = ''
+  for file in orderedSourceFiles
+    js = fs.readFileSync "bin/#{file}.js"
+    js = pad js, '  '
+    wrapped = moduleWrapper.replace '{{module}}', js
+    wrapped = wrapped.replace '{{file}}', file
+    modules += wrapped
+  modules = pad modules, '    '
+  output = browserWrapper.replace '{{modules}}', modules
+  fs.writeFileSync 'mimosas.js', header + '\n' + output
+  console.log "built"
 
 task 'build:doc', 'generate API documentation', ->
   console.log '- Generating API documentation'
-  cmd = "./node_modules/.bin/codo --name #{PROJECT_NAME} "
-  cmd += "--title '#{PROJECT_NAME} API Documentation' ./src/*"
+  cmd = "./node_modules/.bin/codo --name #{Mimosas.NAME} "
+  cmd += "--title '#{Mimosas.NAME} API Documentation' ./src/*"
   executeCommand cmd
 
 task 'build:instrument', 'instrument code for coverage reports', ->
@@ -85,6 +117,25 @@ task "build:readme", "rebuild the readme file", ->
   source = fs.readFileSync('mimosas.litcoffee').toString()
   fs.writeFileSync 'README.md', source
 
+task 'clean', 'clean the build directories', ->
+  console.log '- Cleaning build directories'
+  invoke 'clean:bin'
+  invoke 'clean:testbin'
+  invoke 'clean:coverage'
+
+task 'clean:bin', 'clean the bin directory', ->
+  console.log '- Cleaning bin directory'
+  executeCommand 'rm -rf ./bin/*'
+
+task 'clean:testbin', 'clean the test/bin directory', ->
+  console.log '- Cleaning test/bin directory'
+  executeCommand 'rm -rf ./test/bin/*'
+
+task 'clean:coverage', 'clean the coverage directory', ->
+  console.log '- Cleaning test/coverage directory'
+  cmd = ['rm -f ./test/coverage/index.html', 'rm -rf ./test/coverage/instrumented/*']
+  executeCommand cmd.join(' && ')
+
 
 
 task 'server', 'start a server', ->
@@ -93,6 +144,27 @@ task 'server', 'start a server', ->
   server.stderr.on 'data', (data) -> console.error data.toString().trim()
 
 
+# Build from source.
+buildSource = (cb) ->
+  files = fs.readdirSync 'src'
+  files = ('src/' + file for file in files when file.match(/\.(lit)?coffee$/))
+  run ['-cb', '-o', 'bin'].concat(files), cb
+
+buildTests = (cb) ->
+  files = fs.readdirSync 'test/spec'
+  files = ('test/spec/' + file for file in files when file.match(/\.(lit)?coffee$/))
+  run ['-c', '-o', 'test/bin'].concat(files), cb
+
+# Run CoffeeScript
+run = (args, cb) ->
+  proc = spawn './node_modules/.bin/coffee', args
+  proc.stderr.on 'data', (buffer) -> console.log buffer.toString()
+  proc.on 'exit', (status) ->
+    process.exit(1) if status != 0
+    cb() if typeof cb is 'function'
+
+pad = (str, pad) ->
+  if pad then pad + String(str).split(EOL).join(EOL + pad) else str
 
 testUrl = (url) ->
   console.log "- Testing #{url}"

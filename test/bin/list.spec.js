@@ -3,18 +3,17 @@
   var __slice = [].slice;
 
   (function(root, factory) {
-    var List;
+    var lib;
     if (typeof define === 'function' && define.amd) {
-      define(['../../bin/list'], factory);
+      return define(['../../mimosas'], factory);
     } else if (typeof exports === 'object') {
-      List = require('../../src/list.coffee');
-      module.exports = factory(List);
+      lib = require('../../src/mimosas.coffee');
+      return module.exports = factory(lib);
     } else {
-      List = root.Mimosas.List;
-      factory(List);
+      return factory(root.Mimosas);
     }
-  })(this, function(List) {
-    describe('List', function() {
+  })(this, function(Mimosas) {
+    return describe('Mimosas.List', function() {
       var appendTestItems, getTestItem, list;
       list = void 0;
       getTestItem = function(pointer) {
@@ -37,13 +36,13 @@
         return _results;
       };
       beforeEach(function() {
-        return list = new List();
+        return list = new Mimosas.List();
       });
       afterEach(function() {
         return list = void 0;
       });
       it('should exist', function() {
-        return expect(List).to.exist;
+        return expect(Mimosas.List).to.exist;
       });
       it('should have a zero count on init', function() {
         return expect(list.count()).to.equal(0);
