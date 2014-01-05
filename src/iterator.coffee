@@ -1,4 +1,4 @@
-class exports.Iterator
+class Iterator
   constructor: (@list) ->
     @current = 0
   first: () ->
@@ -12,3 +12,5 @@ class exports.Iterator
   currentItem: () ->
     throw new Error "IteratorOutOfBounds" if @isDone()
     @list.getByIndex @current
+
+exports.Iterator = Iterator

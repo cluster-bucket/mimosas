@@ -2,7 +2,7 @@
 {ControllerContext} = require './controller_context'
 {ControllerStrategy} = require './controller_strategy'
 
-class exports.ViewComponent extends ViewObserver
+class ViewComponent extends ViewObserver
   constructor: (selector) ->
     super
     throw new ReferenceError 'selector' unless selector
@@ -58,3 +58,4 @@ class exports.ViewComponent extends ViewObserver
 
   display: () ->
 
+exports.ViewComponent = ViewComponent
