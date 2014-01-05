@@ -1,7 +1,7 @@
 {List} = require './list'
 {Iterator} = require './iterator'
 
-class exports.ModelSubject
+class ModelSubject
   constructor: () ->
     @observers = new List()
 
@@ -17,3 +17,4 @@ class exports.ModelSubject
       i.currentItem().changed @
       i.next()
 
+exports.ModelSubject = ModelSubject

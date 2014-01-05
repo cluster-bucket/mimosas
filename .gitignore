@@ -1,8 +1,7 @@
 node_modules
 bower_components
-doc/*
+doc
 test/server.log
-test/coverage/instrumented/*
-test/coverage/index.html
+test/coverage
 examples/todo/bower_components
 *.swp

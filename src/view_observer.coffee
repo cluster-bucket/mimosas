@@ -1,7 +1,9 @@
 {Guid} = require './guid'
 
-class exports.ViewObserver
+class ViewObserver
   constructor: () ->
     @__POINTER__ = Guid.generate()
 
   changed: (theChangedSubject) ->
+
+exports.ViewObserver = ViewObserver
