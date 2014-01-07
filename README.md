@@ -39,27 +39,18 @@ Node. This is accomplished with the [returnExports UMD pattern][umdjs]. The
 controller/view event handling needs to be refactored to work without the DOM
 on the server side.
 
-* *Node*: `var Mimosas = require('libs/mimosas');`
-* *AMD*: `define(['libs/mimosas'], function (Mimosas) {});`
-* *Globals*: `window.Mimosas`
+* **Node**: `var Mimosas = require('libs/mimosas');`
+* **AMD**: `define(['libs/mimosas'], function (Mimosas) {});`
+* **Globals**: `window.Mimosas`
 
 Next, create your Models, Views, and Controllers by extending Mimosas core
-classes. If you're using CoffeeScript it's very easy. For example:
+classes.
 
-```coffee
-class Model extends Mimosas.ModelSubject
-  # ..methods
+### Javascript
 
-class View extends Mimosas.ViewLeaf
-  # ..methods
-
-class Controller extends Mimosas.ControllerStrategy
-  # ..methods
-```
-
-If you're using plain JavaScript you'll have to write a bit more code. Mimosas
-provides the Class.extends method to help you out. Whenever there's talk about
-"extending a class" use this pattern with your constructor functions:
+If you're using plain JavaScript you'll need to manage inheritance using
+the `Mimosas.Class.extends` method. Whenever there's talk about "extending a
+class" use this pattern with your constructor functions:
 
 ```js
 var MyClass = (function(classToExtend) {
@@ -69,7 +60,7 @@ var MyClass = (function(classToExtend) {
 })(ClassToExtend);
 ```
 
-The example above would become:
+Here's a basic example:
 
 ```js
 var Model = (function(classToExtend) {
@@ -90,6 +81,22 @@ var Controller = (function(classToExtend) {
   // ..prototypes
 })(Mimosas.ControllerStrategy);
 ```
+
+### CoffeeScript
+
+If you're using CoffeeScript it's a little easier. For example:
+
+```coffee
+class Model extends Mimosas.ModelSubject
+  # ..methods
+
+class View extends Mimosas.ViewLeaf
+  # ..methods
+
+class Controller extends Mimosas.ControllerStrategy
+  # ..methods
+```
+
 Versioning
 ----------
 
