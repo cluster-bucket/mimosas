@@ -1,0 +1,14 @@
+{
+  "name": "todo-cli",
+  "version": "0.1.0",
+  "description": "Todo CLI",
+  "main": "lib/index.js",
+  "scripts": {
+    "start": "./lib/index.js"
+  },
+  "author": "Dustin Boston",
+  "license": "GPLv3",
+  "devDependencies": {
+    "commander": "~2.1.0"
+  }
+}
