@@ -1,6 +1,6 @@
-define ['mimosas/view_leaf'], (ViewLeaf) ->
+define ['mimosas', 'handlebars'], (Mimosas, Handlebars) ->
 
-  class FooterView extends ViewLeaf
+  class FooterView extends Mimosas.ViewLeaf
 
     changed: (model) ->
       @display()

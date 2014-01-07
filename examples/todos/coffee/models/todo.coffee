@@ -1,9 +1,9 @@
-define ['mimosas/model_subject', 'mimosas/guid'], (ModelSubject, Guid) ->
+define ['mimosas'], (Mimosas) ->
 
-  class Todo extends ModelSubject
+  class Todo extends Mimosas.ModelSubject
     constructor: (data) ->
       super
-      @__POINTER__ = Guid.generate()
+      @__POINTER__ = Mimosas.Guid.generate()
       if data.title?
         @setTitle data.title
         @setCompleted data.completed or false

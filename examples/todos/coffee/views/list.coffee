@@ -1,9 +1,6 @@
-define [
-  'mimosas/view_composite'
-  'handlebars'
-], (ViewLeaf, Handlebars) ->
+define ['mimosas', 'handlebars'], (Mimosas, Handlebars) ->
 
-  class ListTodosView extends ViewLeaf
+  class ListTodosView extends Mimosas.ViewLeaf
 
     changed: (model) ->
       @display()

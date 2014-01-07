@@ -1,14 +1,9 @@
-define [
-  'mimosas/model_subject'
-  'mimosas/list'
-  'mimosas/iterator'
-  'cs!./todo'
-], (ModelSubject, List, Iterator, Todo) ->
+define ['mimosas', 'cs!./todo'], (Mimosas, Todo) ->
 
-  class TodoList extends ModelSubject
+  class TodoList extends Mimosas.ModelSubject
 
     constructor: () ->
-      @collection = new List()
+      @collection = new Mimosas.List()
       super
 
     setCompleted: (pointer, completed) ->
@@ -47,7 +42,7 @@ define [
       @collection.count()
 
     getIterator: () ->
-      new Iterator @collection
+      new Mimosas.Iterator @collection
 
     serialize: () ->
       serialized = []

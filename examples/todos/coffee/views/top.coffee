@@ -1,12 +1,9 @@
-define [
-  'mimosas/view_composite'
-  'mimosas/iterator'
-], (ViewComposite, Iterator) ->
+define ['mimosas', 'handlebars'], (Mimosas, Handlebars) ->
 
-  class TopView extends ViewComposite
+  class TopView extends Mimosas.ViewComposite
 
     display: () ->
-      i = new Iterator @list
+      i = new Mimosas.Iterator @list
       while not i.isDone()
         i.currentItem().display()
         i.next()
