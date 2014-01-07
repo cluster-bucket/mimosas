@@ -25,6 +25,7 @@ orderedSourceFiles = [
   'view_component'
   'view_composite'
   'view_leaf'
+  'class'
   'mimosas'
 ]
 
@@ -40,6 +41,8 @@ browserWrapper = """
 
     if (typeof define === 'function' && define.amd) {
       define(function() { return Mimosas; });
+    } else if (typeof exports === 'object') {
+      module.exports = Mimosas;
     } else {
       root.Mimosas = Mimosas;
     }
@@ -85,6 +88,7 @@ task 'build:browser', 'rebuild the merged script for inclusion in the browser', 
     modules += wrapped
   modules = pad modules, '    '
   output = browserWrapper.replace '{{modules}}', modules
+  output = output.replace /^\s*$/gm, ''
   fs.writeFileSync 'mimosas.js', header + '\n' + output
   console.log "built"
 
