@@ -169,7 +169,7 @@ Mimosas is free software. See the LICENSE file for more information.
 
 
 [observer]: http://en.wikipedia.org/wiki/Observer_pattern
-[stragegy]: http://en.wikipedia.org/wiki/Strategy_pattern
+[strategy]: http://en.wikipedia.org/wiki/Strategy_pattern
 [composite]: http://en.wikipedia.org/wiki/Composite_pattern
 [gof]: http://en.wikipedia.org/wiki/Design_Patterns_%28book%29
 [node]: http://nodejs.org/
