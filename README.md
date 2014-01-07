@@ -4,7 +4,7 @@ Mimosas
 What is it?
 -----------
 
-_Mimosas implements MVC's original Smalltalk-80 architectural system._ At least
+*Mimosas implements MVC's original Smalltalk-80 architectural system.* At least
 that's the goal. Mostly, Mimosas is a fun way to explore MVC's roots. As such,
 it focuses on the spirit of the original Smalltalk-80 implementation. This is
 an honest attempt to be truly MVC, not a modern variant. Mimosas can't be an
@@ -28,8 +28,8 @@ in your project is `mimosas.js`. There are two options for obtaining this file:
 * [Download it directly][download]
 * Clone the repository
 
-Once you have have the file, copy it into your project, then check out the
-Getting Started section.
+Once you have the file, copy it into your project, then check out the Getting
+Started section.
 
 Getting Started
 ---------------
@@ -39,17 +39,14 @@ Node. This is accomplished with the [returnExports UMD pattern][umdjs]. The
 controller/view event handling needs to be refactored to work without the DOM
 on the server side.
 
-* If you're using Node you can just `require` the file as you would any other,
-  e.g. `var Mimosas = require('libs/mimosas');`.
-* If you're using AMD you can add Mimosas as a dependeny to your module with
-  the standard define: `define(['libs/mimosas'], function (Mimosas) {});`.
-* If you're not using node or AMD, `Mimosas` will be available as a global on
-  window object.
+* *Node*: `var Mimosas = require('libs/mimosas');`
+* *AMD*: `define(['libs/mimosas'], function (Mimosas) {});`
+* *Globals*: `window.Mimosas`
 
 Next, create your Models, Views, and Controllers by extending Mimosas core
 classes. If you're using CoffeeScript it's very easy. For example:
 
-```coffeescript
+```coffee
 class Model extends Mimosas.ModelSubject
   # ..methods
 
@@ -64,7 +61,7 @@ If you're using plain JavaScript you'll have to write a bit more code. Mimosas
 provides the Class.extends method to help you out. Whenever there's talk about
 "extending a class" use this pattern with your constructor functions:
 
-```javascript
+```js
 var MyClass = (function(classToExtend) {
   Mimosas.Class.extends(MyClass, classToExtend);
   function MyClass() {}
@@ -74,7 +71,7 @@ var MyClass = (function(classToExtend) {
 
 The example above would become:
 
-```javascript
+```js
 var Model = (function(classToExtend) {
   Mimosas.Class.extends(Model, classToExtend);
   function Model() {}
