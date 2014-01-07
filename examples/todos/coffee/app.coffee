@@ -12,23 +12,27 @@ define [
 
   todos = new Todos()
 
-  newTodoView = new NewTodoView '#new-todo'
+  newTodoElement = document.getElementById 'new-todo'
+  newTodoView = new NewTodoView newTodoElement
   newTodoView.setModel todos
   newTodoView.setController new NewTodoController()
-  newTodoView.addEvent 'keypress', '#new-todo', 'inputChanged'
+  newTodoView.addEvent 'keypress', 'inputChanged', '#new-todo'
 
-  listTodosView = new ListTodosView '#main'
+  listTodosElement = document.getElementById 'main'
+  listTodosView = new ListTodosView listTodosElement
   listTodosView.setModel todos
   listTodosView.setController new ListTodosController()
-  listTodosView.addEvent 'click', '.destroy', 'destroyClicked'
-  listTodosView.addEvent 'click', '.toggle', 'toggleClicked'
-  listTodosView.addEvent 'click', '#toggle-all', 'toggleAllClicked'
+  listTodosView.addEvent 'click', 'destroyClicked', '.destroy'
+  listTodosView.addEvent 'click', 'toggleClicked', '.toggle'
+  listTodosView.addEvent 'click', 'toggleAllClicked', '#toggle-all'
 
-  footerView = new FooterView '#footer'
+  footerElement = document.getElementById 'footer'
+  footerView = new FooterView footerElement
   footerView.setModel todos
   footerView.setController new FooterController()
 
-  topView = new TopView '#todoapp'
+  topElement = document.getElementById 'todoapp'
+  topView = new TopView topElement
   topView.add newTodoView
   topView.add listTodosView
   topView.add footerView

@@ -1,11 +1,8 @@
-define [
-  'mimosas/controller_strategy'
-  'cs!../models/todo'
-], (ControllerStrategy, Todo) ->
+define ['mimosas', 'cs!../models/todo'], (Mimosas, Todo) ->
 
   ENTER_KEY = 13
 
-  class NewTodoController extends ControllerStrategy
+  class NewTodoController extends Mimosas.ControllerStrategy
 
     inputChanged: (e) ->
       key = e.which or e.keyCode

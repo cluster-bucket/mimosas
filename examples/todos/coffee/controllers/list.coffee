@@ -1,6 +1,6 @@
-define ['mimosas/controller_strategy'], (ControllerStrategy) ->
+define ['mimosas'], (Mimosas) ->
 
-  class ListTodosController extends ControllerStrategy
+  class ListTodosController extends Mimosas.ControllerStrategy
 
     destroyClicked: (e) ->
       element = @getView().closest e.target, '.todo'

@@ -1,3 +1,3 @@
-define ['mimosas/controller_strategy'], (ControllerStrategy) ->
+define ['mimosas'], (Mimosas) ->
 
-  class FooterController extends ControllerStrategy
+  class FooterController extends Mimosas.ControllerStrategy
