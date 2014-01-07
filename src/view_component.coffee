@@ -3,10 +3,8 @@
 {ControllerStrategy} = require './controller_strategy'
 
 class ViewComponent extends ViewObserver
-  constructor: (selector) ->
+  constructor: (@element) ->
     super
-    throw new ReferenceError 'selector' unless selector
-    @element = @getElementFromSelector selector
     throw new ReferenceError '@element' unless @element
     @controller = new ControllerContext new ControllerStrategy()
 
@@ -30,12 +28,20 @@ class ViewComponent extends ViewObserver
     @controller.setView @
     @controller.setModel(@model) if @model?
 
-  addEvent: (type, selector, method) ->
-    handler = @triggerEvent.bind @, method, selector
-    @element.addEventListener type, handler, false
+  addEvent: (type, method, selector) ->
+    handler = @dispatchEvent.bind @, method, selector
+    if @element.on
+      @element.on type, handler
+    else if @element.addEventListener
+      @element.addEventListener type, handler, false
+    else if @element.addListener
+      @element.addListener type, handler
 
-  triggerEvent: (method, selector, e) ->
-    return unless @elementMatchesSelector e.target, selector
+  dispatchEvent: (method, selector, e) ->
+    if arguments.length is 3 and selector
+      return unless @elementMatchesSelector e.target, selector
+    else if arguments.length is 2
+      e = selector
     @controller.trigger method, e
 
   closest: (element, selector) ->

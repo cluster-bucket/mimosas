@@ -11,4 +11,4 @@ exports.ViewObserver = require('./view_observer').ViewObserver
 exports.ViewComponent = require('./view_component').ViewComponent
 exports.ViewComposite = require('./view_composite').ViewComposite
 exports.ViewLeaf = require('./view_leaf').ViewLeaf
-
+exports.Class = require('./class').Class

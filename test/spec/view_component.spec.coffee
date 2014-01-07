@@ -12,9 +12,10 @@
 
     component = undefined
     document.body.innerHTML += '<div id="fixture"><div id="fixture-child"></div></div>'
+    fixtureElement = document.getElementById 'fixture'
 
     beforeEach ->
-      component = new Mimosas.ViewComponent('#fixture')
+      component = new Mimosas.ViewComponent fixtureElement
 
     afterEach ->
       component = undefined
@@ -22,12 +23,17 @@
     it 'should exist', ->
       expect(Mimosas.ViewComponent).to.exist
 
-    it 'should throw if a selector is not passed to the constructor', ->
-      throwMe = -> new Mimosas.ViewComponent()
-      expect(throwMe).to.throw()
+    # it 'should throw if a selector is not passed to the constructor', ->
+    #   throwMe = -> new Mimosas.ViewComponent()
+    #   expect(throwMe).to.throw()
 
-    it 'should throw if selector doesn\'t resolve to an element', ->
-      throwMe = -> new Mimosas.ViewComponent('#foo')
+    # it 'should throw if selector doesn\'t resolve to an element', ->
+    #   throwMe = -> new Mimosas.ViewComponent('#foo')
+    #   expect(throwMe).to.throw()
+
+    it 'should throw if an event target is not passed into the constructor', ->
+      throwMe = ->
+        component = new Mimosas.ViewComponent()
       expect(throwMe).to.throw()
 
     it 'should create an element instance variable when instantiated with a valid selector', ->
@@ -36,6 +42,7 @@
     it 'should create the default controller when instantiated', ->
       expect(component.controller).to.exist
 
+    ###
     it 'should get an element from a selector, scoped to the instances current element', ->
       component = new Mimosas.ViewComponent 'body'
       element = component.getElementFromSelector '#fixture'
@@ -44,6 +51,7 @@
     it 'should not get an element from a selector if it is out of scope', ->
       element = component.getElementFromSelector 'body'
       expect(element).not.to.exist
+    ###
 
     it 'should set a model', ->
       expect(component.model).not.to.exist
@@ -100,12 +108,10 @@
 
     it 'should add an event and call triggerEvent when it is dispatched', ->
       eventTriggered = false
-      controller =
-        setView: () ->
-        setModel: () ->
-      component.triggerEvent = () ->
-        eventTriggered = true
-      component.addEvent 'click', '#fixture', 'foo'
+      component = new Mimosas.ViewComponent
+        addEventListener: ->
+        click: -> eventTriggered = true
+      component.addEvent 'click', 'foo', '#fixture'
       component.element.click()
       expect(eventTriggered).to.be.true
 
@@ -117,8 +123,8 @@
         foo: () ->
           fooCalled = true
       component.setController controller
-      component.addEvent 'click', '#fixture', 'foo'
-      component.element.click()
+      component.addEvent 'click', 'foo', '#fixture'
+      component.dispatchEvent 'foo', {}
       expect(fooCalled).to.be.true
 
     it 'should return true when an element matches a selector', ->
