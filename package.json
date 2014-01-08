@@ -5,7 +5,7 @@
   "main": "mimosas.litcoffee",
   "scripts": {
     "start": "cake build",
-    "test": "cake build && ./node_modules/.bin/karma start --browsers Chrome"
+    "test": "cake build && cake test"
   },
   "keywords": [
     "coffeescript",

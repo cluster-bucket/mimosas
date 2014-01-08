@@ -2,34 +2,35 @@
   if typeof define is 'function' and define.amd
     define ['../../mimosas'], factory
   else if typeof exports is 'object'
-    lib = require '../../src/mimosas.coffee'
+    lib = require '../../mimosas'
     module.exports = factory lib
   else
     factory root.Mimosas
 ) @, (Mimosas) ->
 
+  ###
+  if document?
+    document.body.innerHTML += '<div id="fixture"><div id="fixture-child"></div></div>'
+    eventTarget = document.getElementById 'fixture'
+  else
+    EventEmitter = require('events').EventEmitter
+    eventTarget = new EventEmitter()
+  ###
+  
   describe 'Mimosas.ViewComponent', ->
 
     component = undefined
-    document.body.innerHTML += '<div id="fixture"><div id="fixture-child"></div></div>'
-    fixtureElement = document.getElementById 'fixture'
+    eventTarget =
+      addEventListener: ->
 
     beforeEach ->
-      component = new Mimosas.ViewComponent fixtureElement
+      component = new Mimosas.ViewComponent eventTarget
 
     afterEach ->
       component = undefined
 
     it 'should exist', ->
       expect(Mimosas.ViewComponent).to.exist
-
-    # it 'should throw if a selector is not passed to the constructor', ->
-    #   throwMe = -> new Mimosas.ViewComponent()
-    #   expect(throwMe).to.throw()
-
-    # it 'should throw if selector doesn\'t resolve to an element', ->
-    #   throwMe = -> new Mimosas.ViewComponent('#foo')
-    #   expect(throwMe).to.throw()
 
     it 'should throw if an event target is not passed into the constructor', ->
       throwMe = ->
@@ -127,11 +128,13 @@
       component.dispatchEvent 'foo', {}
       expect(fooCalled).to.be.true
 
+    ###
     it 'should return true when an element matches a selector', ->
       element = component.element
       selector = '#fixture'
       result = component.elementMatchesSelector element, selector
       expect(result).to.be.true
+    ###
 
     it 'should return false when an element doesn\'t match a selector', ->
       element = component.element
@@ -139,7 +142,9 @@
       result = component.elementMatchesSelector element, selector
       expect(result).to.be.false
 
+    ###
     it 'should get the closest element to a given element, with a given selector', ->
       child = document.getElementById 'fixture-child'
       result = component.closest child, '#fixture'
       expect(result.id).to.equal 'fixture'
+    ###

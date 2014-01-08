@@ -23,17 +23,22 @@ module.exports = (config) ->
 
     # test results reporter to use
     # possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress', 'coverage']
+    reporters: ['progress']
 
+    ###
     preprocessors:
       'mimosas.js': 'coverage'
 
     coverageReporter:
       type: 'html'
       dir: 'test/coverage'
-
+    ###
+    
+    hostname: process.env.IP
+    port: process.env.PORT
+    
     # web server port
-    port: 9876
+    # port: 9876
 
     # enable / disable colors in the output (reporters and logs)
     colors: true
