@@ -62,14 +62,6 @@ moduleWrapper = """
 task 'test', 'test all the things', ->
   console.log '- Running unit tests'
   invoke 'build'
-  invoke 'test:globals'
-  invoke 'test:amd'
-
-task 'test:globals', 'test browser globals', ->
-  testUrl 'http://localhost:8000/test/SpecRunnerGlobals.html'
-
-task 'test:amd', 'test browser AMD', ->
-  testUrl 'http://localhost:8000/test/SpecRunnerAMD.html'
 
 task 'build', 'build test and source', ->
   invoke 'clean'
@@ -98,29 +90,6 @@ task 'build:doc', 'generate API documentation', ->
   cmd += "--title '#{Mimosas.NAME} API Documentation' ./src/*"
   executeCommand cmd
 
-task 'build:instrument', 'instrument code for coverage reports', ->
-  console.log '- Instrumenting code for coverage reports'
-  unless fs.existsSync './test/coverage'
-    fs.mkdir './test/coverage'
-
-  unless fs.existsSync './test/coverage/instrumented'
-    fs.mkdir './test/coverage/instrumented'
-
-  cmd = 'jscoverage ./bin/ ./test/coverage/instrumented/'
-  exec cmd, (err, stdout, stderr) ->
-    if err then console.error stderr else console.log stdout
-    invoke 'build:coverage'
-
-task 'build:coverage', 'generate code coverage report from instrumented code', ->
-  console.log '- Generating code coverage report'
-  cmd = './node_modules/.bin/mocha-browser ./test/SpecRunnerGlobalsCoverage.html -SR html-cov > ./test/coverage/index.html'
-  executeCommand cmd
-
-# Push the source into the README now that GitHub has property litcoffee support
-task "build:readme", "rebuild the readme file", ->
-  source = fs.readFileSync('mimosas.litcoffee').toString()
-  fs.writeFileSync 'README.md', source
-
 task 'clean', 'clean the build directories', ->
   console.log '- Cleaning build directories'
   invoke 'clean:bin'
@@ -134,18 +103,6 @@ task 'clean:bin', 'clean the bin directory', ->
 task 'clean:testbin', 'clean the test/bin directory', ->
   console.log '- Cleaning test/bin directory'
   executeCommand 'rm -rf ./test/bin/*'
-
-task 'clean:coverage', 'clean the coverage directory', ->
-  console.log '- Cleaning test/coverage directory'
-  cmd = ['rm -f ./test/coverage/index.html', 'rm -rf ./test/coverage/instrumented/*']
-  executeCommand cmd.join(' && ')
-
-
-
-task 'server', 'start a server', ->
-  server = spawn './node_modules/.bin/coffee', ['./test/server.coffee']
-  server.stdout.on 'data', (data) -> console.log data.toString().trim()
-  server.stderr.on 'data', (data) -> console.error data.toString().trim()
 
 
 # Build from source.
