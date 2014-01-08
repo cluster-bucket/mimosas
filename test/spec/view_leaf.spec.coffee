@@ -2,7 +2,7 @@
   if typeof define is 'function' and define.amd
     define ['../../mimosas'], factory
   else if typeof exports is 'object'
-    lib = require '../../src/mimosas.coffee'
+    lib = require '../../mimosas'
     module.exports = factory lib
   else
     factory root.Mimosas
@@ -11,10 +11,11 @@
   describe 'Mimosas.ViewLeaf', ->
 
     leaf = undefined
-    document.body.innerHTML += '<div id="fixture"><div id="fixture-child"></div></div>'
+    eventTarget =
+      addEventListener: ->
 
     beforeEach ->
-      leaf = new Mimosas.ViewLeaf('#fixture')
+      leaf = new Mimosas.ViewLeaf eventTarget
 
     afterEach ->
       leaf = undefined

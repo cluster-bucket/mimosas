@@ -35,12 +35,11 @@
       </nav>
       <div id='filecontents'>
         <h1 id="mimosas">Mimosas</h1>
-<h2 id="what-is-it-">What is it?</h2><p><em>Mimosas implements MVC&#39;s original Smalltalk-80 architectural system.</em> At least
-that&#39;s the goal. Mostly, Mimosas is a fun way to explore MVC&#39;s roots. As such,
-it focuses on the spirit of the original Smalltalk-80 implementation. This is
-an honest attempt to be truly MVC, not a modern variant. Mimosas can&#39;t be an
-exact clone of Smalltalk MVC, but it should capture the spirit of it, and maybe
-even make it more accessible.</p><h2 id="documentation">Documentation</h2><p>API documentation is included in HTML format in the docs/ directory. Things
+<h2 id="what-is-it-">What is it?</h2><p>Mimosas implements MVC&#39;s original Smalltalk-80 architectural system. It is an
+honest attempt to disconnect from all the fancy modern development paradigms and
+reconnect with the basics of MVC. The aim is not to be a clone of Smalltalk MVC,
+but to capture its spirit, build upon its foundations, and possibly make 
+something useful in the process.</p><h2 id="documentation">Documentation</h2><p>Documentation is included in HTML format in the docs/ directory. Things
 should do exactly what they say they will do and nothing more. In other words,
 the documentation should be just as <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY</a> as the code, so there isn&#39;t a
 lot of elaboration unless it is clearly necessary.</p><h2 id="installation">Installation</h2><p>Mimosas doesn&#39;t have any dependencies. The only file that is required for use
@@ -48,15 +47,36 @@ in your project is <code>mimosas.js</code>. There are two options for obtaining 
 <li><a href="https://raw.github.com/dustinboston/mimosas/master/mimosas.js">Download it directly</a></li>
 <li>Clone the repository</li>
 </ul><p>Once you have the file, copy it into your project, then check out the Getting
-Started section.</p><h2 id="getting-started">Getting Started</h2><p>You can use Mimosas in the browser with AMD and globals, or on the server using
+Started section.</p><h2 id="overview">Overview</h2><p>As in Smalltalk, Mimosas divides an application into three parts, the model, 
+view, and controller.</p><ul>
+<li>Models use the <a href="http://en.wikipedia.org/wiki/Observer_pattern">Observer pattern</a> to notify views that data has changed</li>
+<li>Views use the <a href="http://en.wikipedia.org/wiki/Composite_pattern">Composite pattern</a> to create a heirarchy of UI elements</li>
+<li>Controllers use the <a href="http://en.wikipedia.org/wiki/Strategy_pattern">Strategy pattern</a> to handle events from views</li>
+</ul><p>In Smalltalk-80 views were always heirarchies, with one single &quot;top view&quot;, and 
+many child views. A single view could represent both single items, such as a 
+checkbox, or more complex components, such as a list of selectable items.</p><p>In Mimosas, the top view and other views which can have children implement the 
+ViewComposite class, which is the Composite in the Composite pattern. Views that
+do not have children implement the ViewLeaf class, which is the Leaf in the 
+Composite pattern. Both classes inherit from the ViewComponent (Component),
+which in turn inherits from the ViewObserver (Observer).</p><p>Views and controllers are tightly coupled. They both maintain a reference to the
+other. Mimosas minimizes this coupling by forcing views to communicate with
+their respective controllers through the ControllerContext class, which is the 
+Context part of the Strategy pattern and can be viewed as a sort of Facade in 
+this scenario. This communication happens transparently.</p><p>Lastly, models can be strings, a single object, or a collection of objects.
+Smalltalk didn&#39;t really care, as long as they inherited from a base object. In
+Mimosas that object is the ModelSubject.</p><h2 id="getting-started">Getting Started</h2><p>You can use Mimosas in the browser with AMD and globals, or on the server using
 Node. This is accomplished with the <a href="https://github.com/umdjs/umd">returnExports UMD pattern</a>. The
 controller/view event handling needs to be refactored to work without the DOM
-on the server side.</p><ul>
-<li><strong>Node</strong>: <code>var Mimosas = require(&#39;libs/mimosas&#39;);</code></li>
-<li><strong>AMD</strong>: <code>define([&#39;libs/mimosas&#39;], function (Mimosas) {});</code></li>
-<li><strong>Globals</strong>: <code>window.Mimosas</code></li>
-</ul><p>Next, create your Models, Views, and Controllers by extending Mimosas core
-classes.</p><h3 id="javascript">Javascript</h3><p>If you&#39;re using plain JavaScript you&#39;ll need to manage inheritance using
+on the server side.</p><pre><code class="lang-js">// Node
+var Mimosas = require(&#39;libs/mimosas&#39;);
+
+// Browser AMD
+define([&#39;libs/mimosas&#39;], function (Mimosas) {});
+
+// Browser Globals
+window.Mimosas;
+</code></pre><p>Next, create your Models, Views, and Controllers by extending Mimosas core
+classes. If you&#39;re using plain JavaScript you&#39;ll need to manage inheritance using
 the <code>Mimosas.Class.extends</code> method. Whenever there&#39;s talk about &quot;extending a
 class&quot; use this pattern with your constructor functions:</p><pre><code class="lang-js">var MyClass = (function(classToExtend) {
   Mimosas.Class.extends(MyClass, classToExtend);
@@ -80,8 +100,7 @@ var Controller = (function(classToExtend) {
   function Controller() {}
   // ..prototypes
 })(Mimosas.ControllerStrategy);
-</code></pre>
-<h3 id="coffeescript">CoffeeScript</h3><p>If you&#39;re using CoffeeScript it&#39;s a little easier. For example:</p><pre><code class="lang-coffee">class Model extends Mimosas.ModelSubject
+</code></pre><p>If you&#39;re using CoffeeScript it&#39;s a little easier. For example:</p><pre><code class="lang-coffee">class Model extends Mimosas.ModelSubject
   # ..methods
 
 class View extends Mimosas.ViewLeaf
@@ -115,7 +134,7 @@ components, which should be installed the same way, as needed.</p><ul>
       </div>
     </div>
     <div id='footer'>
-  January 07, 14 16:38:48 by
+  January 07, 14 21:45:19 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

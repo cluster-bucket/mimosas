@@ -61,9 +61,27 @@ moduleWrapper = """
 
 task 'test', 'test all the things', ->
   console.log '- Running unit tests'
-  invoke 'build'
+  invoke 'test:server'
+  invoke 'test:browser'
+
+task 'test:server', 'test server side scripts', ->
+  console.log '- Running the server tests'
+  cmd = './node_modules/.bin/mocha --require ./test/helpers/chai.js '
+  cmd += '--reporter min test/bin/*.spec.js'
+  executeCommand cmd
+
+task 'test:browser', 'test browser scripts', ->
+  console.log '- Running the browser tests'
+  cmd = 'karma start --no-browsers'
+  executeCommand cmd
 
 task 'build', 'build test and source', ->
+  invoke 'clean'
+  buildSource ->
+    invoke 'build:browser'
+  buildTests()
+
+task 'build:full', 'build test, source, and documentation', ->
   invoke 'clean'
   buildSource ->
     invoke 'build:browser'
@@ -94,7 +112,6 @@ task 'clean', 'clean the build directories', ->
   console.log '- Cleaning build directories'
   invoke 'clean:bin'
   invoke 'clean:testbin'
-  invoke 'clean:coverage'
 
 task 'clean:bin', 'clean the bin directory', ->
   console.log '- Cleaning bin directory'
@@ -103,7 +120,7 @@ task 'clean:bin', 'clean the bin directory', ->
 task 'clean:testbin', 'clean the test/bin directory', ->
   console.log '- Cleaning test/bin directory'
   executeCommand 'rm -rf ./test/bin/*'
-
+  
 
 # Build from source.
 buildSource = (cb) ->
@@ -126,23 +143,6 @@ run = (args, cb) ->
 
 pad = (str, pad) ->
   if pad then pad + String(str).split(EOL).join(EOL + pad) else str
-
-testUrl = (url) ->
-  console.log "- Testing #{url}"
-  server = startServer()
-  cmd = "./node_modules/.bin/mocha-phantomjs --reporter dot #{url}"
-  exec cmd, (err, stdout, stderr) ->
-    console.log stdout
-    server.kill()
-
-startServer = () ->
-  out = fs.openSync('./test/server.log', 'a')
-  err = fs.openSync('./test/server.log', 'a')
-  server = spawn 'coffee', ['test/server.coffee'],
-    detached: true
-    stdio: ['ignore', out, err]
-  server.unref()
-  server
 
 executeCommand = (cmd) ->
   console.log "- Running command #{cmd}"
