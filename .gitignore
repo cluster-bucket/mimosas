@@ -6,5 +6,6 @@ test/bin
 test/coverage
 examples/todo/bower_components
 examples/todo-cli/node_modules
-examples/todo-cli/lib/todos.txt
+examples/todo-cli/todos.txt
+examples/todo-cli/npm-debug.log
 *.swp
