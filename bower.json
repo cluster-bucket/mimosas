@@ -7,7 +7,7 @@
     "Dustin Boston <dustin@dblogit.com>"
   ],
   "license": "GPLv3",
-  "private": true,
+  "private": false,
   "ignore": [
     "**/.*",
     "node_modules",
