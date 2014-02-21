@@ -11,7 +11,7 @@
   "devDependencies": {
     "requirejs": "~2.1.9",
     "mocha": "~1.15.1",
-    "chai": "~1.8.1",
+    "chai": "~1.8.1"
   },
   "keywords": [
     "mvc",
