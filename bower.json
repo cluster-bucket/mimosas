@@ -2,12 +2,7 @@
   "name": "Mimosas",
   "main": "mimosas.js",
   "version": "0.1.0",
-  "homepage": "https://github.com/dustinboston/mimosas",
-  "authors": [
-    "Dustin Boston <dustin@dblogit.com>"
-  ],
   "license": "GPLv3",
-  "private": false,
   "ignore": [
     "**/.*",
     "node_modules",
@@ -17,5 +12,17 @@
     "requirejs": "~2.1.9",
     "mocha": "~1.15.1",
     "chai": "~1.8.1",
-  }
+  },
+  "keywords": [
+    "mvc",
+    "smalltalk",
+    "javascript",
+    "coffee",
+    "coffeescript",
+    "design-patterns",
+    "observer",
+    "composite",
+    "strategy",
+    "mimosas"
+  ]
 }
