@@ -1,6 +1,6 @@
 {
   "name": "Mimosas",
-  "main": "",
+  "main": "mimosas.js",
   "version": "0.1.0",
   "homepage": "https://github.com/dustinboston/mimosas",
   "authors": [
