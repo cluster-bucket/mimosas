@@ -3,6 +3,7 @@
   "description": "Mimosas is my observer/subject application starter",
   "version": "0.1.0",
   "main": "mimosas.litcoffee",
+  "repository": "https://github.com/dustinboston/mimosas.git",
   "scripts": {
     "start": "cake build",
     "test": "cake build && cake test"

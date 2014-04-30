@@ -11,10 +11,12 @@ class ModelSubject
   detach: (observer) ->
     @observers.remove observer
 
-  notify: () ->
+  # Broadcast the aspect that was changed
+  notify: (aspect) ->
     i = new Iterator @observers
-    while not i.isDone()
-      i.currentItem().changed @
+    until i.isDone()
+      currentItem  = i.currentItem()
+      currentItem.changed.call currentItem, aspect
       i.next()
 
 exports.ModelSubject = ModelSubject
