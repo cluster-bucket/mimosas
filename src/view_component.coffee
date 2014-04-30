@@ -3,18 +3,13 @@
 {ControllerStrategy} = require './controller_strategy'
 
 class ViewComponent extends ViewObserver
+
+  defaultControllerClass: ControllerStrategy
+
   constructor: (@element) ->
     super
-    throw new ReferenceError '@element' unless @element
-    @controller = new ControllerContext new ControllerStrategy()
-
-  # Opt for simplicity over efficiency and compatibility
-  getElementFromSelector: (selector) ->
-    # After the element is set all calls will be scoped to it
-    scope = @element or document
-    nodes = scope.querySelectorAll selector
-    return nodes[0] if nodes.length > 0
-    return
+    throw new ReferenceError 'element is not defined' unless @element
+    @setController @defaultControllerClass
 
   setModel: (@model) ->
     @model.attach @
@@ -44,24 +39,33 @@ class ViewComponent extends ViewObserver
       e = selector
     @controller.trigger method, e
 
+  elementMatchesSelector: (element, selector) ->
+    matches = element.matches or element.matchesSelector or
+    element.msMatchesSelector or element.mozMatchesSelector or
+    element.webkitMatchesSelector or element.oMatchesSelector
+
+    matches.call element, selector
+
+  getElement: () ->
+    @element
+
+  display: () ->
+    @dsiplayView()
+
+  displayView: ->
+
   closest: (element, selector) ->
     return element if element is @element
     return element if @elementMatchesSelector element, selector
     parent = element.parentNode
     @closest parent, selector
 
-  elementMatchesSelector: (element, selector) ->
-    matches = false
-    for prefix in ['webkit', 'moz', 'ms']
-      name = "#{prefix}MatchesSelector"
-      continue unless element[name]
-      matches = element[name] selector
-      break
-    matches
-
-  getElement: () ->
-    @element
-
-  display: () ->
+  # Opt for simplicity over efficiency and compatibility
+  getElementFromSelector: (selector) ->
+    # After the element is set all calls will be scoped to it
+    scope = @element or document
+    nodes = scope.querySelectorAll selector
+    return nodes[0] if nodes.length > 0
+    return
 
 exports.ViewComponent = ViewComponent
