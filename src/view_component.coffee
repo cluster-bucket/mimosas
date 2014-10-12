@@ -9,7 +9,7 @@ class ViewComponent extends ViewObserver
   constructor: (@element) ->
     super
     throw new ReferenceError 'element is not defined' unless @element
-    @setController @defaultControllerClass
+    @setController new @defaultControllerClass()
 
   setModel: (@model) ->
     @model.attach @
@@ -53,6 +53,30 @@ class ViewComponent extends ViewObserver
     @dsiplayView()
 
   displayView: ->
+    @element.show()
+    
+  displaySuperView: (viewPointer, callerPointer) ->
+    @callOnSuperView 'displaySuperView', viewPointer, @__POINTER__
+    
+  hide: ->
+    @hideView()
+
+  hideView: ->
+    @element.hide()
+
+  hideSuperView: (viewPointer, callerPointer) ->
+    @callOnSuperView 'hideSuperView', viewPointer, @__POINTER__
+
+  release: ->
+    @releaseView()
+
+  releaseView: ->
+    @superView = undefined
+    @element.remove()
+
+  callOnSuperView: (fn, viewPointer, callerPointer) ->
+    if @superView?[fn]?
+      @superView[fn] viewPointer, @__POINTER__
 
   closest: (element, selector) ->
     return element if element is @element

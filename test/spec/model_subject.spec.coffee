@@ -37,7 +37,7 @@
 
     it 'should notify observers', ->
       isChanged = false
-      subject.attach mockObserver 'foo', () ->
+      subject.attach mockObserver 'foo', ->
         isChanged = true
       subject.notify()
       expect(isChanged).to.be.true
