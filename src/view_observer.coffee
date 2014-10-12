@@ -4,6 +4,6 @@ class ViewObserver
   constructor: () ->
     @__POINTER__ = Guid.generate()
 
-  changed: (theChangedSubject) ->
+  changed: (theChangedSubjectAspects...) ->
 
 exports.ViewObserver = ViewObserver

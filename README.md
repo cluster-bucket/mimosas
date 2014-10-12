@@ -22,12 +22,13 @@ Installation
 ------------
 
 Mimosas doesn't have any dependencies. The only file that is required for use
-in your project is `mimosas.js`. There are two options for obtaining this file:
+in your project is `mimosas.js`. There are three options for obtaining this file:
 
+* With Bower: `bower install mimosas`
 * [Download it directly][download]
 * Clone the repository
 
-Once you have the file, copy it into your project, then check out the Getting
+Once you have the file, reference it in your project, then check out the Getting
 Started section.
 
 Overview
