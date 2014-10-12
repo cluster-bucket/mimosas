@@ -1,15 +1,24 @@
 {
   "name": "Mimosas",
   "description": "Mimosas is my observer/subject application starter",
-  "version": "0.1.0",
-  "main": "mimosas.litcoffee",
+  "version": "1.0.0",
+  "main": "mimosas.js",
+  "repository": "https://github.com/dustinboston/mimosas.git",
   "scripts": {
     "start": "cake build",
     "test": "cake build && cake test"
   },
   "keywords": [
+    "mvc",
+    "smalltalk",
+    "javascript",
+    "coffee",
     "coffeescript",
-    "design patterns"
+    "design-patterns",
+    "observer",
+    "composite",
+    "strategy",
+    "mimosas"
   ],
   "author": "Dustin Boston <dustin@dblogit.com>",
   "contributors": [],

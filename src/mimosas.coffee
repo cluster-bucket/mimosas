@@ -1,4 +1,4 @@
-exports.VERSION = '0.1.0'
+exports.VERSION = '1.0.0'
 exports.NAME = 'Mimosas'
 
 exports.List = require('./list').List
