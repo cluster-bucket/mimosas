@@ -147,5 +147,5 @@ pad = (str, pad) ->
 executeCommand = (cmd) ->
   console.log "- Running command #{cmd}"
   exec cmd, (err, stdout, stderr) ->
-    if err then console.error stderr else console.log stdout
+    if err then console.error(stderr) else console.log stdout
 

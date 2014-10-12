@@ -20,8 +20,15 @@
   describe 'Mimosas.ViewComponent', ->
 
     component = undefined
+
     eventTarget =
       addEventListener: ->
+      matches: -> false
+
+    if document?.createElement?
+      eventTarget = document.createElement 'div'
+
+    eventTarget.id = 'fixture'
 
     beforeEach ->
       component = new Mimosas.ViewComponent eventTarget

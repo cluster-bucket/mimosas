@@ -7,9 +7,13 @@ class ViewComposite extends ViewComponent
     super
     @list = new List()
     @superView = undefined
+    
+    if @defaultControllerClass?
+      @setController new @defaultControllerClass()
 
-  addSubView: ->
-    @add.apply @, arguments
+  addSubView: (component) ->
+    component.superView = @
+    @add component
 
   add: (component) ->
     component.superView = @
@@ -18,17 +22,38 @@ class ViewComposite extends ViewComponent
   remove: (pointer) ->
     @list.remove pointer
 
-  display: () ->
-    @dsiplayView()
+  display: ->
+    super
     @displaySubViews()
 
-  displayView: ->
-
   displaySubViews: ->
-    i = new Iterator @list
+    i = new Mimosas.Iterator @list
     until i.isDone()
       subView = i.currentItem()
       subView.display()
       i.next()
+      
+  hide: ->
+    super
+    @hideSubViews()
+
+  hideSubViews: ->
+    i = new Iterator @list
+    until i.isDone()
+      subView = i.currentItem()
+      subView.hide()
+      i.next()
+
+  release: ->
+    @releaseSubViews()
+    super
+
+  releaseSubViews: ->
+    i = new Iterator @list
+    until i.isDone()
+      subView = i.currentItem()
+      subView.release()
+      i.next()
+    @list.removeAll()
 
 exports.ViewComposite = ViewComposite
