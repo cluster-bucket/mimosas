@@ -20,15 +20,15 @@ var ListTodosController = require('./controllers/list').ListTodosController;
 
 var todos = new Todos();
 
-newTodoView = new NewTodoView(commander);
+var newTodoView = new NewTodoView(commander);
 newTodoView.setModel(todos);
 newTodoView.setController(new NewTodoController());
 newTodoView.addEvent('create', 'inputChanged');
 
-listTodosView = new ListTodosView(commander)
+var listTodosView = new ListTodosView(commander);
 listTodosView.setModel(todos);
-listTodosView.setController(new ListTodosController())
-listTodosView.addEvent('list', 'list')
+listTodosView.setController(new ListTodosController());
+listTodosView.addEvent('list', 'list');
 
 commander.parse(process.argv);
 

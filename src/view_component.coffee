@@ -50,10 +50,10 @@ class ViewComponent extends ViewObserver
     @element
 
   display: () ->
-    @dsiplayView()
+    @displayView()
 
   displayView: ->
-    @element.show()
+    @element.style.display = '';
     
   displaySuperView: (viewPointer, callerPointer) ->
     @callOnSuperView 'displaySuperView', viewPointer, @__POINTER__
@@ -62,7 +62,7 @@ class ViewComponent extends ViewObserver
     @hideView()
 
   hideView: ->
-    @element.hide()
+    @element.style.display = 'none';
 
   hideSuperView: (viewPointer, callerPointer) ->
     @callOnSuperView 'hideSuperView', viewPointer, @__POINTER__
@@ -72,7 +72,7 @@ class ViewComponent extends ViewObserver
 
   releaseView: ->
     @superView = undefined
-    @element.remove()
+    @element.parentNode.removeChild @element
 
   callOnSuperView: (fn, viewPointer, callerPointer) ->
     if @superView?[fn]?
